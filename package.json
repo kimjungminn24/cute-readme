@@ -1,0 +1,25 @@
+{
+  "name": "cute-readme",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test \"test/*.test.js\"",
+    "preview:room": "node scripts/preview-room.js",
+    "preview:suika": "node scripts/preview-suika.js",
+    "render:room": "node scripts/render-room.js",
+    "render:cards": "node scripts/render-cards.js",
+    "render:suika": "node scripts/render-suika.js",
+    "import": "node scripts/import-png.js",
+    "gen:pixellab": "node scripts/gen-pixellab.js",
+    "import:pixellab": "node scripts/import-pixellab.js",
+    "gen:character": "node scripts/gen-character.js",
+    "import:character": "node scripts/import-character.js",
+    "edit:character": "node scripts/edit-character.js",
+    "editor": "node scripts/serve.js"
+  }
+}

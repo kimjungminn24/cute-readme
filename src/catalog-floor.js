@@ -1,0 +1,51 @@
+import { rug, chest, bookshelf, ore, creeper, dirt, grassblock } from './catalog-floor-blocks.js';
+import { bed } from './catalog-floor-art.js';
+import { table, desk, tv, fridge, stool, drawer, books, cactus } from './catalog-floor-furniture.js';
+import { turntable, plant, lamp } from './catalog-floor-moving.js';
+import { tree, sakura, grass, flowers } from './catalog-floor-garden.js';
+import * as AI from './catalog-floor-ai.js';
+import { teddy, mushroom, snowman, donut, bunny, penguin, gift, dog, ducky, frog, dino, ghost } from './catalog-floor-plushies.js';
+
+export const FLOOR_ITEMS = {
+  rug: { name: 'Carpet', fc: 2, fr: 2, layer: 0, art: AI.rug },
+  bed: { name: 'Bed', fc: 2, fr: 1, layer: 1, top: 5.5, art: AI.bed },
+  chest: { name: 'Chest', fc: 1, fr: 1, layer: 1, top: 11, art: AI.chest },
+  bookshelf: { name: 'Bookshelf', fc: 1, fr: 0.5, layer: 1, art: AI.bookshelf },
+  ore: { name: 'Diamond Ore', fc: 1, fr: 1, layer: 1, top: 12, art: ore },
+  creeper: { name: 'Creeper', fc: 1, fr: 1, layer: 1, art: creeper },
+  dirt: { name: 'Dirt', fc: 1, fr: 1, layer: 1, top: 12, art: dirt },
+  grassblock: { name: 'Grass Block', fc: 1, fr: 1, layer: 1, top: 12, art: grassblock },
+  table: { name: 'Table', fc: 1, fr: 1, layer: 1, top: 9.6, art: AI.table },
+  desk: { name: 'Desk', fc: 1.5, fr: 0.8, layer: 1, top: 8.6, art: AI.desk },
+  tv: { name: 'TV', fc: 1, fr: 0.6, layer: 1, art: AI.tv },
+  fridge: { name: 'Fridge', fc: 1, fr: 1, layer: 1, top: 13, art: AI.fridge },
+  plant: { name: 'Plant', fc: 1, fr: 1, layer: 1, art: AI.plant },
+  lamp: { name: 'Floor Lamp', fc: 1, fr: 1, layer: 1, art: AI.lamp },
+  stool: { name: 'Stool', fc: 1, fr: 1, layer: 1, top: 6.4, art: AI.stool },
+  drawer: { name: 'Drawer', fc: 1, fr: 0.7, layer: 1, top: 9, art: AI.drawer },
+  cactus: { name: 'Cactus', fc: 1, fr: 1, layer: 1, art: AI.cactus },
+  sofa: { name: 'Sofa', fc: 2, fr: 1, layer: 1, art: AI.sofa },
+  books: { name: 'Books', fc: 1, fr: 1, layer: 1, top: 3.9, art: AI.books },
+  turntable: { name: 'Turntable', fc: 1, fr: 1, layer: 1, art: AI.turntable },
+
+  teddy: { name: 'Teddy Bear', fc: 1, fr: 1, layer: 1, art: AI.teddy },
+  dog: { name: 'Dog', fc: 1, fr: 1, layer: 1, art: AI.dog },
+  mushroom: { name: 'Mushroom', fc: 1, fr: 1, layer: 1, art: AI.mushroom },
+  snowman: { name: 'Snowman', fc: 1, fr: 1, layer: 1, art: AI.snowman },
+  donut: { name: 'Donut', fc: 1, fr: 1, layer: 1, art: AI.donut },
+  bunny: { name: 'Bunny', fc: 1, fr: 1, layer: 1, art: AI.bunny },
+  penguin: { name: 'Penguin', fc: 1, fr: 1, layer: 1, art: AI.penguin },
+  gift: { name: 'Gift', fc: 1, fr: 1, layer: 1, art: AI.gift },
+  rainbow: { name: 'Rainbow', fc: 1, fr: 1, layer: 1, art: AI.rainbow },
+  bigheart: { name: 'Big Heart', fc: 1, fr: 1, layer: 1, art: AI.bigheart },
+  ribbon: { name: 'Ribbon', fc: 1, fr: 1, layer: 1, art: AI.ribbon },
+  ducky: { name: 'Rubber Duck', fc: 1, fr: 1, layer: 1, art: AI.ducky },
+  frog: { name: 'Frog', fc: 1, fr: 1, layer: 1, art: AI.frog },
+  dino: { name: 'Dino', fc: 1, fr: 1, layer: 1, art: AI.dino },
+  ghost: { name: 'Ghost', fc: 1, fr: 1, layer: 1, art: AI.ghost },
+
+  grass: { name: 'Grass', fc: 1, fr: 1, layer: 0, art: AI.grass },
+  flowers: { name: 'Flowers', fc: 1, fr: 1, layer: 1, art: AI.flowers },
+  tree: { name: 'Tree', fc: 2, fr: 2, layer: 1, art: AI.tree },
+  sakura: { name: 'Cherry Blossom', fc: 2, fr: 2, layer: 1, art: AI.sakura },
+};

@@ -1,0 +1,53 @@
+# Copy to .github/workflows/suika.yml.
+# Leave TARGET_REPO empty to use the current repository.
+
+name: suika
+
+on:
+  schedule:
+    - cron: '0 18 * * *'
+  workflow_dispatch:
+
+env:
+  TARGET_REPO: ''
+  GIT_ROOM_REPO: kimjungminn24/cute-readme
+  SUIKA_THEME: suika
+  SUIKA_TITLE: Contributors
+  SUIKA_LIMIT: 15
+  SUIKA_WIDTH: 520
+  SUIKA_SCALE: 1
+  SUIKA_DROP: 'true'
+  SUIKA_NAMES: 'true'
+
+concurrency:
+  group: suika
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ env.GIT_ROOM_REPO }}
+          path: .cute-readme
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: node .cute-readme/scripts/render-suika.js "${TARGET_REPO:-$GITHUB_REPOSITORY}" suika.svg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add suika.svg
+          git diff --cached --quiet || { git commit -m "update suika"; git pull --rebase origin "$GITHUB_REF_NAME"; git push; }

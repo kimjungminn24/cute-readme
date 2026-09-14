@@ -1,0 +1,49 @@
+name: suika
+
+on:
+  schedule:
+    - cron: '0 18 * * *'
+  push:
+    branches: [main]
+    paths:
+      - src/**
+      - scripts/render-suika.js
+      - .github/workflows/suika.yml
+  workflow_dispatch:
+
+env:
+  SUIKA_THEME: pixel
+  SUIKA_TITLE: Contributors
+  SUIKA_LIMIT: 15
+  SUIKA_WIDTH: 520
+  SUIKA_SCALE: 1
+  SUIKA_DROP: 'true'
+  SUIKA_NAMES: 'true'
+
+concurrency:
+  group: svg-commit
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: node scripts/render-suika.js "${{ github.repository }}" docs/suika.svg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/suika.svg
+          git diff --cached --quiet || { git commit -m "update suika"; git pull --rebase origin "$GITHUB_REF_NAME"; git push; }

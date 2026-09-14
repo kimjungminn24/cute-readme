@@ -1,0 +1,29 @@
+{
+  "v": 1,
+  "grid": { "cols": 8, "rows": 8 },
+  "theme": { "wall": "#c4a875", "floor": "#b8945f" },
+  "items": [
+    { "id": "bed", "col": 0, "row": 2 },
+    { "id": "rug", "col": 3, "row": 3 },
+    { "id": "furnace", "col": 5, "row": 0 },
+    { "id": "chest", "col": 7, "row": 2 },
+    { "id": "books", "col": 4, "row": 4 },
+    { "id": "creeper", "col": 6, "row": 5 },
+    { "id": "sofa", "col": 4, "row": 6 }
+  ],
+  "wallItems": [
+    { "id": "window", "wall": "right", "u": 4 },
+    { "id": "painting", "wall": "left", "u": 4 }
+  ],
+  "person": {
+    "col": 3,
+    "row": 6,
+    "skin": "#fadccc",
+    "hair": "#6c554e",
+    "hairStyle": "bob",
+    "top": "#77bcd1",
+    "bottom": "#4e6877"
+  },
+  "effects": [],
+  "skills": []
+}

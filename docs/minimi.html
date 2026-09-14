@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>미니미 옷장 · Git-room</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #faf4ec; color: #59473f; font: 15px/1.6 system-ui, sans-serif; }
+    main { max-width: 1000px; margin: 48px auto; padding: 0 24px; }
+    a { color: #647c6c; }
+    h1 { margin-bottom: 5px; font-size: 34px; }
+    header p { color: #907a6d; margin-top: 0; }
+    .wardrobe { display: grid; grid-template-columns: 310px 1fr; gap: 24px; margin-top: 30px; }
+    .stage, .controls { border: 1px solid #e4d5c7; border-radius: 24px; background: #fffdf8; padding: 24px; }
+    .stage { position: sticky; top: 24px; align-self: start; text-align: center; background: #eee9dc; }
+    #preview { height: 330px; display: grid; place-items: center; }
+    #preview svg { height: 310px; width: 240px; }
+    #small-preview { height: 84px; margin: 10px auto 0; }
+    #small-preview svg { width: 60px; height: 84px; }
+    .controls { display: grid; gap: 20px; }
+    fieldset { border: 0; padding: 0; margin: 0; }
+    legend { font-weight: 700; margin-bottom: 8px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    button { cursor: pointer; border: 1px solid #ddcfc1; border-radius: 10px; background: #fffdf9; color: inherit; padding: 8px 12px; font: inherit; }
+    button[aria-pressed=true] { background: #d9e8dc; border-color: #7f9f8b; color: #355541; }
+    button:focus-visible, input:focus-visible { outline: 3px solid #9fbdad; outline-offset: 3px; }
+    .colors { display: flex; flex-wrap: wrap; gap: 16px; }
+    .colors label { display: grid; gap: 4px; font-size: 13px; }
+    input[type=color] { width: 52px; height: 36px; padding: 3px; border: 1px solid #ddcfc1; background: white; border-radius: 8px; }
+    #save { background: #647f6b; color: white; border-color: #647f6b; }
+    .actions { display: flex; justify-content: center; gap: 8px; }
+    .hint { font-size: 13px; color: #867466; }
+    @media(max-width: 650px) { main { margin-top: 24px; } .wardrobe { grid-template-columns: 1fr; } .stage { position: static; } #preview { height: 240px; } #preview svg { height: 230px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header><a href="../editor/">← 방 편집기로</a><h1>나만의 작은 미니미</h1><p>머리를 고르고, 옷을 입히고, 오늘의 표정과 자세를 정해 보세요.</p></header>
+    <div class="wardrobe">
+      <section class="stage" aria-label="미니미 미리보기">
+        <div id="preview" role="img" aria-label="선택한 머리와 옷을 입은 미니미"></div>
+        <div id="small-preview" role="img" aria-label="작은 크기의 미니미"></div>
+        <p class="hint">작은 크기로 보기</p>
+        <div class="actions"><button id="flip" aria-pressed="false">좌우 반전</button><button id="save">SVG 저장</button></div>
+        <p class="hint">얼굴과 옷은 따로 바뀌어요.<br>마음에 드는 조합으로 꾸며 보세요.</p>
+      </section>
+      <section class="controls" aria-label="미니미 꾸미기">
+        <fieldset><legend>머리</legend><div class="chips" id="hairStyle"></div></fieldset>
+        <fieldset><legend>옷</legend><div class="chips" id="outfit"></div></fieldset>
+        <fieldset><legend>자세</legend><div class="chips" id="pose"></div></fieldset>
+        <fieldset><legend>표정</legend><div class="chips" id="expression"></div></fieldset>
+        <fieldset><legend>액세서리</legend><div class="chips" id="accessory"></div></fieldset>
+        <fieldset><legend>색상</legend><div class="colors" id="colors"></div></fieldset>
+        <button id="reset">처음 모습으로</button>
+      </section>
+    </div>
+  </main>
+  <script type="module">
+    import { personArt, DEFAULT_PERSON, EXPRESSION_STYLES, ACCESSORY_STYLES } from '../src/catalog.js';
+    import { MINI_HAIRS, MINI_OUTFITS, MINI_POSES } from '../src/person-minimi.js';
+    let person = { ...DEFAULT_PERSON };
+    const labels = {
+      bob:'동글 단발', short:'짧은 머리', long:'긴 머리', ponytail:'포니테일', bun:'똥머리', pigtails:'양갈래', curly:'곱슬', bald:'민머리',
+      tee:'티셔츠', hoodie:'후드티', cardigan:'가디건', dress:'리본 원피스', shirt:'셔츠', overalls:'멜빵바지', sweater:'줄무늬 니트', blazer:'재킷', track:'트레이닝', sailor:'세일러', apron:'앞치마', pajama:'별 잠옷', vest:'니트 조끼', coat:'코트',
+      stand:'서기', sit:'앉기', back:'뒷모습', normal:'기본', smile:'미소', wink:'윙크', surprised:'깜짝', sleepy:'졸림', none:'없음', glasses:'안경', crown:'왕관', wand:'마법봉', sword:'검', catEars:'고양이 귀'
+    };
+    const svg = () => `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="336" viewBox="-30 -80 60 84" shape-rendering="crispEdges">${personArt(person)}</svg>`;
+    function render() {
+      document.querySelector('#preview').innerHTML = svg();
+      document.querySelector('#small-preview').innerHTML = svg();
+      for (const b of document.querySelectorAll('[data-key]')) b.setAttribute('aria-pressed', String(person[b.dataset.key] === b.dataset.value));
+      document.querySelector('#flip').setAttribute('aria-pressed', String(person.flip));
+      for (const input of document.querySelectorAll('input[type=color]')) input.value = person[input.name];
+    }
+    for (const [key, options] of Object.entries({ hairStyle:MINI_HAIRS, outfit:MINI_OUTFITS, pose:MINI_POSES, expression:EXPRESSION_STYLES, accessory:ACCESSORY_STYLES })) {
+      for (const id of Object.keys(options)) {
+        const b = document.createElement('button'); b.textContent = labels[id] ?? id; b.dataset.key = key; b.dataset.value = id;
+        b.onclick = () => { person[key] = id; render(); }; document.getElementById(key).append(b);
+      }
+    }
+    for (const [key,label] of Object.entries({skin:'피부',hair:'머리',top:'상의',bottom:'하의'})) {
+      const el = document.createElement('label'); el.textContent = label;
+      const input = document.createElement('input'); input.type = 'color'; input.name = key;
+      input.oninput = () => { person[key] = input.value; render(); }; el.append(input); document.querySelector('#colors').append(el);
+    }
+    document.querySelector('#flip').onclick = () => { person.flip = !person.flip; render(); };
+    document.querySelector('#reset').onclick = () => { person = { ...DEFAULT_PERSON }; render(); };
+    document.querySelector('#save').onclick = () => {
+      const url = URL.createObjectURL(new Blob([svg()], { type:'image/svg+xml' }));
+      const a = document.createElement('a'); a.href = url; a.download = 'my-minimi.svg'; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+    };
+    render();
+  </script>
+</body>
+</html>

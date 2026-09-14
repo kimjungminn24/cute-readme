@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%209%209'%3E%3Cstyle%3Epath{fill:%23111}@media(prefers-color-scheme:dark){path{fill:%23fff}}%3C/style%3E%3Cpath%20d='M1%200h2v1h-2zM6%200h2v1h-2zM0%201h4v1h-4zM5%201h4v1h-4zM0%202h9v1h-9zM0%203h9v1h-9zM1%204h7v1h-7zM1%205h7v1h-7zM2%206h5v1h-5zM3%207h3v1h-3zM4%208h1v1h-1z'/%3E%3C/svg%3E">
+<title>cute-readme</title>
+<style>
+  :root {
+    --paper: #e8e8e8;
+    --card: #ffffff;
+    --ink: #111111;
+    --ink-mid: #444444;
+    --ink-dim: #6f6f6f;
+    --line: #c6c6c6;
+    --line-soft: #e2e2e2;
+    --surface: #f4f4f4;
+    --accent: #111111;
+    --accent-deep: #000000;
+    --hi: #8a8a8a;
+    --hi-soft: #efefef;
+    --accent-ink: #ffffff;
+    --on: #e4e4e4;
+    --on-ring: #111111;
+    --ghost: #f0f0f0;
+    --danger: #b3261e;
+    --radius: 0;
+    --shadow: 3px 3px 0 var(--ink);
+    --btn-h: 32px;
+    --mono: 'Consolas', 'D2Coding', 'Menlo', monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font: 14px/1.5 -apple-system, 'Segoe UI', 'Malgun Gothic', sans-serif;
+  }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  button, input, select, textarea { transition: none; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+  #top { position: sticky; top: 0; z-index: 5; background: var(--card); border-bottom: 2px solid var(--ink); }
+
+  header {
+    display: flex; align-items: center; gap: 8px; padding: 7px 20px;
+    background: var(--surface); border-bottom: 2px solid var(--line);
+  }
+  header h1 {
+    flex: 1; margin: 0; display: flex; align-items: center;
+    font: 700 15px var(--mono); letter-spacing: 0.02em;
+  }
+  header h1 b { color: var(--accent); }
+
+  .caret {
+    display: inline-block; width: 8px; height: 15px; margin-left: 3px;
+    background: var(--ink); animation: caret 1.06s steps(1) infinite;
+  }
+  @keyframes caret { 50% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .caret { animation: none; } }
+
+
+  .mascot { display: block; width: 18px; height: 18px; fill: var(--ink); }
+  .mascot-wrap {
+    flex: 0 0 auto; width: 18px; height: 18px;
+    display: flex; margin-right: 9px;
+  }
+
+  button {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    height: var(--btn-h); padding: 0 12px;
+    border: 2px solid var(--ink); border-radius: var(--radius);
+    background: var(--card); color: var(--ink);
+    box-shadow: 2px 2px 0 var(--ink);
+    font: 600 12px var(--mono); white-space: nowrap; cursor: pointer;
+  }
+  button:hover { background: var(--hi-soft); }
+  button:active { transform: translate(2px, 2px); box-shadow: none; }
+  button:disabled {
+    opacity: 1; cursor: default; color: var(--ink-dim);
+    border-color: var(--line); box-shadow: 2px 2px 0 var(--line);
+  }
+  button:disabled:hover { background: var(--card); }
+  button:disabled:active { transform: none; box-shadow: 2px 2px 0 var(--line); }
+  button.ghost { background: var(--ghost); }
+  button.ghost:hover { background: var(--line-soft); }
+  button.primary { background: var(--accent); color: var(--accent-ink); }
+  button.primary:hover { background: var(--accent-deep); }
+  button.primary:disabled:hover { background: var(--accent); }
+  .block button.add { margin-top: 8px; }
+
+  #bar {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+    padding: 10px 20px 12px;
+  }
+
+  #palette { flex: 1 1 100%; display: flex; flex-wrap: wrap; gap: 6px; }
+  #actions { flex: 1 1 100%; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+
+  #palette button {
+    font-family: var(--mono); font-size: 12px;
+    border-color: var(--line); color: var(--ink-mid); box-shadow: none;
+  }
+  #palette button:hover { border-color: var(--ink); color: var(--ink); box-shadow: 2px 2px 0 var(--ink); }
+  #palette button:active { transform: translate(2px, 2px); box-shadow: none; }
+
+  main {
+    display: grid; grid-template-columns: minmax(320px, 1fr) minmax(360px, 1fr);
+    gap: 16px; padding: 16px 20px; max-width: 1400px; margin: 0 auto;
+  }
+  #blocks { display: flex; flex-direction: column; min-height: 300px; align-self: start; }
+  .block {
+    background: var(--card); border: 2px solid var(--ink);
+    border-radius: var(--radius); box-shadow: var(--shadow); padding: 10px 12px;
+  }
+  .block:focus-within { border-color: var(--hi); }
+  .bar { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin-bottom: 8px; }
+  .bar .type {
+    flex: 1; min-width: 60px; cursor: grab;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+  .bar button { height: 24px; padding: 0 8px; }
+  .bar button.on, .bar button.on:hover {
+    background: var(--accent); border-color: var(--accent); color: var(--accent-ink);
+  }
+  .block input[type=text], .block input[type=number], .block textarea, .block select {
+    font: inherit; font-size: 13px; width: 100%;
+    height: var(--btn-h); padding: 0 8px;
+    border: 2px solid var(--ink); border-radius: var(--radius);
+    background: var(--card); color: var(--ink);
+  }
+  .block textarea { resize: vertical; height: auto; min-height: 62px; padding: 6px 8px; }
+
+  .block > :is(input, select, textarea) + :is(input, select, textarea) { margin-top: 6px; }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+  .block .row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .block .row > * { flex: 1; min-width: 0; }
+  .block .row > .slim { flex: 0 0 90px; }
+  .block .row > .lbl {
+    flex: 0 0 auto; align-self: center; padding-left: 4px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+  .block .row > .lbl:first-child { padding-left: 0; }
+  .block .row input[type=range] { flex: 2; min-width: 90px; accent-color: var(--accent); align-self: center; }
+  .block .row > output {
+    flex: 0 0 38px; align-self: center; text-align: right;
+    font-size: 12px; color: var(--ink-dim); font-variant-numeric: tabular-nums;
+  }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; align-items: center; }
+  .badge-row input { flex: 1; }
+  .badge-row button { flex: 0 0 auto; }
+  input[type=color] {
+    width: 46px; height: var(--btn-h); padding: 2px;
+    border: 2px solid var(--ink); border-radius: var(--radius);
+    background: var(--card); cursor: pointer;
+  }
+  #empty {
+    color: var(--ink-dim); text-align: center; padding: 60px 10px;
+    border: 2px dashed var(--line); border-radius: var(--radius); background: var(--surface);
+  }
+
+  #out {
+    align-self: start; position: sticky; top: calc(var(--top-h, 108px) + 16px);
+    display: flex; flex-direction: column; gap: 8px;
+    max-height: calc(100vh - var(--top-h, 108px) - 32px);
+  }
+  #tabs { display: flex; gap: 2px; border-bottom: 2px solid var(--line); }
+  #tabs button {
+    border: none; background: none; box-shadow: none; height: 34px; padding: 0 12px;
+    margin-bottom: -2px; border-bottom: 3px solid transparent;
+    font: 600 12px var(--mono); color: var(--ink-dim);
+  }
+  #tabs button:active { transform: none; box-shadow: none; }
+  #tabs button:hover { color: var(--ink); background: var(--hi-soft); }
+  #tabs button.active { color: var(--ink); font-weight: 700; border-bottom-color: var(--accent); }
+  #panes {
+    overflow: auto; flex: 1;
+    background: var(--card); border: 2px solid var(--ink);
+    border-radius: var(--radius); box-shadow: var(--shadow);
+  }
+  #preview { padding: 24px; }
+  #mdwrap { display: none; }
+  #md {
+    display: block; width: 100%; border: 0; padding: 16px; min-height: 200px; resize: none; overflow: hidden;
+    font: 12px/1.5 var(--mono); background: var(--card); color: var(--ink);
+  }
+  #preview h1, #preview h2 { border-bottom: 1px solid var(--line-soft); padding-bottom: .3em; }
+  #preview h1 { font-size: 1.7em; margin: .5em 0; }
+  #preview h2 { font-size: 1.35em; margin: .6em 0; }
+  #preview h3 { font-size: 1.15em; margin: .6em 0; }
+  #preview p { margin: .5em 0; }
+  #preview hr { border: 0; border-top: 3px solid var(--line-soft); margin: 18px 0; }
+  #preview ul { margin: .5em 0; }
+  #preview svg, #preview img { max-width: 100%; height: auto; }
+  #preview .cols { display: flex; flex-wrap: wrap; }
+  #preview .cols > div { flex: 1 1 200px; border: 1px solid var(--line-soft); padding: 4px 10px; min-width: 0; }
+  #preview .pics { text-align: center; }
+  #preview .pics > * { display: inline-block; vertical-align: middle; margin: 0 2px; }
+
+  #preview .tightrow { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
+  #preview .tightrow > * { margin: 0; }
+  #preview .floatrow::after { content: ''; display: block; clear: both; }
+  #preview .floatrow > .side-l { float: left; margin: 4px 14px 4px 0; max-width: 55%; }
+  #preview .floatrow > .side-r { float: right; margin: 4px 0 4px 14px; max-width: 55%; }
+  #preview .floatrow > .side-l > p, #preview .floatrow > .side-r > p { margin: 0; }
+
+  .rowwrap { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cell { flex: 1 1 240px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+
+  .cell > .block:last-child { flex: 1; }
+  .gap { height: 10px; border-radius: var(--radius); }
+  .gap.hot { background: var(--hi); }
+  .block.dragging { opacity: .4; }
+  .block.drop-top { box-shadow: 0 -3px 0 var(--accent); }
+  .block.drop-bottom { box-shadow: 0 3px 0 var(--accent); }
+  .block.drop-left { box-shadow: -3px 0 0 var(--accent); }
+  .block.drop-right { box-shadow: 3px 0 0 var(--accent); }
+
+  .sticker-row {
+    display: flex; align-items: center; gap: 6px; min-width: 0;
+    height: var(--btn-h); padding: 2px 6px;
+    border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface);
+  }
+  .sticker-row .mini-status {
+    margin: 0; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .sticker-chip {
+    width: 26px; height: 26px; flex: 0 0 auto;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .sticker-chip svg { display: block; max-width: 100%; max-height: 100%; }
+  .badge-row button.on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  #preview .sticker-out { display: inline-block; vertical-align: middle; margin: 0 2px; }
+  #preview .sticker-out svg { display: block; }
+  #preview .sticker-out.full { display: block; }
+  #preview .sticker-out.full svg { width: 100%; }
+  .art-pick {
+    display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px;
+    max-height: 190px; overflow-y: auto;
+    padding: 6px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface);
+  }
+  .art-pick[hidden] { display: none; }
+  .art-set {
+    flex: 1 1 100%; margin: 4px 0 0;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+  .art-tile {
+    width: 42px; height: 42px; padding: 3px; flex: 0 0 auto;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid var(--ink); border-radius: var(--radius); background: var(--card);
+    box-shadow: 2px 2px 0 var(--ink); cursor: pointer;
+  }
+  .art-tile:hover { background: var(--hi-soft); }
+  .art-tile:active { transform: translate(2px, 2px); box-shadow: none; }
+  .art-tile svg { display: block; max-width: 100%; max-height: 100%; }
+  .art-tile svg, .art-tile svg * { animation: none !important; }
+  #measurer { position: absolute; left: -9999px; top: 0; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+  .mini-status { font-size: 12px; color: var(--ink-dim); margin-top: 4px; }
+  .mini-status.err { color: var(--danger); }
+  .link-item { border-top: 1px dashed var(--line-soft); margin-top: 8px; }
+  .link-item:first-child { border-top: 0; margin-top: 0; }
+  .link-item select { flex: 1; min-width: 0; }
+  .link-item input[type=color] { flex: 0 0 auto; }
+  .room-inline {
+    display: block; width: 100%; height: 480px; margin-top: 8px;
+    border: 1px solid var(--line); border-radius: var(--radius); background: var(--card);
+  }
+
+  @media (max-width: 960px) {
+    main { grid-template-columns: 1fr; }
+    #out { position: static; max-height: none; }
+  }
+  @media (pointer: coarse) {
+    :root { --btn-h: 40px; }
+    .bar button { height: 36px; }
+  }
+</style>
+</head>
+<body>
+<div id="top">
+  <header>
+    <h1><span class="mascot-wrap" aria-hidden="true"><svg class="mascot" viewBox="0 0 9 9"><path d="M1 0h2v1h-2zM6 0h2v1h-2zM0 1h4v1h-4zM5 1h4v1h-4zM0 2h9v1h-9zM0 3h9v1h-9zM1 4h7v1h-7zM1 5h7v1h-7zM2 6h5v1h-5zM3 7h3v1h-3zM4 8h1v1h-1z"/></svg></span>cute<b>-</b>readme<span class="caret" aria-hidden="true"></span></h1>
+  </header>
+  <div id="bar">
+    <nav id="palette" aria-label="Add a block">
+    </nav>
+    <div id="actions">
+      <button id="copyBtn">Copy markdown</button>
+      <button id="dlBtn" class="primary">Download README.md</button>
+      <button id="resetBtn" class="ghost">Reset</button>
+    </div>
+  </div>
+</div>
+<svg id="measurer" aria-hidden="true"></svg>
+<main>
+  <section id="blocks" aria-label="Blocks"></section>
+  <aside id="out">
+    <div id="tabs">
+      <button id="tabPrev" class="active" aria-pressed="true">Preview</button>
+      <button id="tabMd" aria-pressed="false">Markdown</button>
+    </div>
+    <div id="panes">
+      <div id="preview"></div>
+      <div id="mdwrap"><textarea id="md" readonly aria-label="Generated markdown" spellcheck="false"></textarea></div>
+    </div>
+  </aside>
+</main>
+
+<script type="module" src="./readme/readme.js"></script>
+</body>
+</html>
