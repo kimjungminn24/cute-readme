@@ -200,7 +200,13 @@ export function miniGrid(p = {}) {
   const acc = ACCESSORIES[accId];
   if (acc && !(back && acc.on === 'face')) {
     if (accId === 'glasses') head(['GGGGG..GGGGG', 'G...GGGG...G', 'GGGGG..GGGGG'], -6, -22);
-    else {
+    else if (acc.art?.pixel) {
+      // Head-wide art bypasses headPoint, which folds the outer columns and broke the left ear.
+      // Every column ends on the dome's first row, so the base meets the head with no seam.
+      const art = acc.art.pixel;
+      const top = hair === 'bald' ? -25 : -28;
+      drawAscii(dots, art, { ...pal, ...acc.palette }, { ax: 8, ay: art.length, dx: 0, dy: top + lift });
+    } else {
       const art = Array.isArray(acc.art) ? acc.art : acc.art?.round;
       if (art) {
         const options = acc.on === 'hand'

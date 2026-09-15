@@ -100,6 +100,15 @@ export const ACCESSORIES = {
     on: 'head',
     palette: { C: '#786a62', c: '#8f7f75', p: '#e097a4' },
     art: {
+      // Minimi: 16 wide, drawn straight onto the head so the ears stay symmetric.
+      pixel: [
+        '...CC......CC...',
+        '...CcC....CcC...',
+        '...CcpC..CpcC...',
+        '..CcppC..CppcC..',
+        '..CcC......CcC..',
+        '..CC........CC..',
+      ],
       chibi: [
         '....C.............C.....',
         '...CcC...........CcC....',
