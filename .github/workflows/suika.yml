@@ -2,13 +2,9 @@ name: suika
 
 on:
   schedule:
-    - cron: '0 18 * * *'
+    - cron: '0 18 * * 0'
   push:
     branches: [main]
-    paths:
-      - src/**
-      - scripts/render-suika.js
-      - .github/workflows/suika.yml
   workflow_dispatch:
 
 env:
