@@ -53,9 +53,19 @@ if (embedded) {
   ui.drawTextRows();
   addEventListener('message', (e) => {
     if (e.origin !== location.origin || e.data?.type !== 'room-load') return;
+    if (e.data.room) {
+      // Only report changes once the room has loaded, or an empty editor would overwrite the saved room.
+      try {
+        loadRoom(e.data.room);
+      } catch (err) {
+        ui.roomChanged = null;
+        console.error(err);
+        alert('This room could not be opened, so the editor will leave it as it is.');
+        return;
+      }
+    }
     ui.roomChanged = () => window.parent.postMessage({ type: 'room-change', room: app.state }, location.origin);
-    if (e.data.room) loadRoom(e.data.room);
-    else ui.roomChanged();
+    ui.roomChanged();
   });
   window.parent.postMessage({ type: 'room-ready' }, location.origin);
 } else {
