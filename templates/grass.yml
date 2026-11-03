@@ -1,0 +1,46 @@
+# Copy to .github/workflows/grass.yml.
+# Redraws the contribution grass in your room.svg from your GitHub graph once a day.
+# ROOM_SVG is where the builder's zip puts the room. Leave GRASS_USER empty to use the repository owner.
+
+name: grass
+
+on:
+  schedule:
+    - cron: '0 15 * * *'
+  workflow_dispatch:
+
+env:
+  ROOM_SVG: assets/room.svg
+  GRASS_USER: ''
+  CUTE_README_REPO: kimjungminn24/cute-readme
+
+concurrency:
+  group: grass
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ env.CUTE_README_REPO }}
+          path: .cute-readme
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: node .cute-readme/scripts/render-grass.js "$ROOM_SVG" "${GRASS_USER:-$GITHUB_REPOSITORY_OWNER}"
+
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ROOM_SVG"
+          git diff --cached --quiet || { git commit -m "update grass"; git pull --rebase origin "$GITHUB_REF_NAME"; git push; }

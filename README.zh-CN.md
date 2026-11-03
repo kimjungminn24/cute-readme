@@ -14,6 +14,8 @@ make your GitHub profile a tiny pixel home
 
 在[生成器](https://kimjungminn24.github.io/cute-readme/)里放一个 `+ miniroom` 块，点 `Make a room`。在 `Items` 标签里选家具放到地板上，挑颜色，加对话气泡。导出为 `room.svg`。
 
+`Contribution Grass` 把你的 GitHub 贡献图铺在地板上。把 [templates/grass.yml](templates/grass.yml) 复制到 `.github/workflows/grass.yml`，它每天会把 `room.svg` 里的草地重画成最新的。
+
 ## Assemble your README
 
 <img src="./docs/assemble.png" width="100%" alt="README 生成器">

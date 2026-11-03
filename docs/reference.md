@@ -7,7 +7,7 @@ Room JSON spec, the full catalog, per-section option tables, npm scripts, callin
 | | |
 | --- | --- |
 | **Room** | [Room JSON spec](#room-json-spec) / [Catalog](#catalog) |
-| **Add-ons** | [Link badges](#link-badges) / [Repository cards](#repository-cards) / [Suika contributors](#suika-contributors) |
+| **Add-ons** | [Link badges](#link-badges) / [Repository cards](#repository-cards) / [Suika contributors](#suika-contributors) / [Contribution grass](#contribution-grass) |
 | **Development** | [npm scripts](#npm-scripts) / [Using it from code](#using-it-from-code) / [Layout](#layout) |
 
 ## Room JSON spec
@@ -233,6 +233,21 @@ The jar is a U, open at the top. A lighter line runs inside the wall and a shado
 
 ---
 
+## Contribution grass
+
+`grassgraph` (7 weeks) and `grasslong` (14 weeks) are floor items shaped like the contribution graph. Without data they show a sample pattern.
+
+[templates/grass.yml](../templates/grass.yml) keeps them real. Once a day it reads your graph from `github.com/users/<user>/contributions`, puts it in the room as `grass.rows`, and commits the redrawn `room.svg`. Nothing else in the room changes, and a day with no new commits leaves the file alone.
+
+| Environment variable | Default | What it does |
+|---|---|---|
+| `ROOM_SVG` | `assets/room.svg` | The room file from the builder zip |
+| `GRASS_USER` | the repository owner | Whose graph to draw |
+
+It needs no token and reads the same graph your profile shows. Private contributions appear only if "Private contributions" is turned on in your profile settings.
+
+---
+
 ## npm scripts
 
 | Command | What it does |
@@ -243,6 +258,7 @@ The jar is a U, open at the top. A lighter line runs inside the wall and a shado
 | `npm run render:cards` | Repo cards → SVG (args: `[cards.json] [outdir]`) |
 | `npm run render:suika` | Suika contributors → SVG (args: `owner/repo [out] [theme]`) |
 | `npm run preview:suika` | Suika → `suika.svg` (args: `owner/repo`, `--theme=all` / `--width=`) |
+| `npm run render:grass` | Refresh the contribution grass in a builder `room.svg` (args: `room.svg user`) |
 | `npm run import` | Pixel-art PNG → dot strings (args: `art.png --kind effect`) |
 | `node scripts/preview-minimi.js` | Minimi contact sheet → `docs/minimi-gallery.html` |
 | `node scripts/build-dotfont.js` | BDF font → dot blob (args: `<in.bdf> [out.dot]`) |

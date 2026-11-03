@@ -7,7 +7,7 @@
 | | |
 | --- | --- |
 | **방** | [방 JSON 스펙](#방-json-스펙) / [카탈로그](#카탈로그) |
-| **붙임 요소** | [링크 뱃지](#링크-뱃지) / [리포지토리 카드](#리포지토리-카드) / [수박게임 기여자](#수박게임-기여자) |
+| **붙임 요소** | [링크 뱃지](#링크-뱃지) / [리포지토리 카드](#리포지토리-카드) / [수박게임 기여자](#수박게임-기여자) / [잔디](#잔디) |
 | **개발** | [npm 스크립트](#npm-스크립트) / [코드로 쓰기](#코드로-쓰기) / [구조](#구조) |
 
 ## 방 JSON 스펙
@@ -233,6 +233,21 @@
 
 ---
 
+## 잔디
+
+`grassgraph` (7주) 와 `grasslong` (14주) 는 기여 그래프 모양의 바닥 아이템입니다. 데이터가 없으면 예시 무늬가 나옵니다.
+
+[templates/grass.yml](../templates/grass.yml) 이 진짜 잔디로 채웁니다. 하루 한 번 `github.com/users/<user>/contributions` 에서 잔디를 읽어 방에 `grass.rows` 로 넣고, 다시 그린 `room.svg` 를 커밋합니다. 방의 다른 것은 바뀌지 않고, 새 커밋이 없는 날은 파일을 건드리지 않습니다.
+
+| 환경 변수 | 기본값 | 하는 일 |
+|---|---|---|
+| `ROOM_SVG` | `assets/room.svg` | 빌더 zip 에 든 방 파일 |
+| `GRASS_USER` | 저장소 주인 | 누구의 잔디를 그릴지 |
+
+토큰은 필요 없고, 프로필에 보이는 잔디를 그대로 읽습니다. 비공개 기여는 프로필 설정에서 "Private contributions" 를 켰을 때만 들어갑니다.
+
+---
+
 ## npm 스크립트
 
 | 명령 | 설명 |
@@ -243,6 +258,7 @@
 | `npm run render:cards` | 리포 카드 → SVG (인자로 `[cards.json] [출력폴더]`) |
 | `npm run render:suika` | 기여자 수박게임 → SVG (인자로 `owner/repo [출력] [테마]`) |
 | `npm run preview:suika` | 수박게임 → `suika.svg` (인자로 `owner/repo`, `--theme=all`, `--width=`) |
+| `npm run render:grass` | 빌더의 `room.svg` 속 잔디를 최신으로 다시 그림 (인자: `room.svg user`) |
 | `npm run import` | 픽셀아트 PNG → 도트 문자열 (인자로 `그림.png --kind effect`) |
 | `node scripts/preview-minimi.js` | 미니미 모음표 → `docs/minimi-gallery.html` |
 | `node scripts/build-dotfont.js` | BDF 글꼴 → 도트 블롭 (인자로 `<입력.bdf> [출력.dot]`) |

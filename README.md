@@ -14,6 +14,8 @@ A pixel toolbox for your GitHub profile: a mini-room editor, a block README buil
 
 Drop a `+ miniroom` block in the [builder](https://kimjungminn24.github.io/cute-readme/) and hit `Make a room`. Place furniture from the `Items` tab, pick colours, add a speech bubble. It comes out as `room.svg`.
 
+`Contribution Grass` lays your GitHub graph on the floor. To keep it up to date, copy [templates/grass.yml](templates/grass.yml) to `.github/workflows/grass.yml`; it redraws the grass in `room.svg` once a day.
+
 ## Assemble your README
 
 <img src="./docs/assemble.png" width="100%" alt="the README builder">

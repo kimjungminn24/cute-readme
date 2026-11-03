@@ -7,7 +7,7 @@
 | | |
 | --- | --- |
 | **房间** | [房间 JSON 规格](#房间-json-规格) / [素材目录](#素材目录) |
-| **附加组件** | [链接徽章](#链接徽章) / [仓库卡片](#仓库卡片) / [西瓜游戏贡献者](#西瓜游戏贡献者) |
+| **附加组件** | [链接徽章](#链接徽章) / [仓库卡片](#仓库卡片) / [西瓜游戏贡献者](#西瓜游戏贡献者) / [贡献草地](#贡献草地) |
 | **开发** | [npm 脚本](#npm-脚本) / [作为代码库使用](#作为代码库使用) / [目录结构](#目录结构) |
 
 ## 房间 JSON 规格
@@ -233,6 +233,21 @@
 
 ---
 
+## 贡献草地
+
+`grassgraph`（7 周）和 `grasslong`（14 周）是贡献图形状的地板物品。没有数据时显示示例图案。
+
+[templates/grass.yml](../templates/grass.yml) 会填上真实数据。它每天从 `github.com/users/<user>/contributions` 读取贡献图，以 `grass.rows` 写进房间，并提交重画后的 `room.svg`。房间里的其他东西不变，没有新提交的日子不会改动文件。
+
+| 环境变量 | 默认值 | 作用 |
+|---|---|---|
+| `ROOM_SVG` | `assets/room.svg` | 生成器 zip 里的房间文件 |
+| `GRASS_USER` | 仓库所有者 | 画谁的贡献图 |
+
+不需要 token，读取的就是你主页上显示的贡献图。只有在个人资料设置里打开 "Private contributions"，私有贡献才会出现。
+
+---
+
 ## npm 脚本
 
 | 命令 | 说明 |
@@ -243,6 +258,7 @@
 | `npm run render:cards` | 仓库卡片 → SVG（参数 `[cards.json] [输出目录]`） |
 | `npm run render:suika` | 西瓜游戏贡献者 → SVG（参数 `owner/repo [输出] [主题]`） |
 | `npm run preview:suika` | 西瓜游戏 → `suika.svg`（参数 `owner/repo`、`--theme=all`、`--width=`） |
+| `npm run render:grass` | 把生成器导出的 `room.svg` 里的草地重画成最新（参数：`room.svg user`） |
 | `npm run import` | 像素画 PNG → 点阵字符串（参数 `图.png --kind effect`） |
 | `node scripts/preview-minimi.js` | 迷你小人总览 → `docs/minimi-gallery.html` |
 | `node scripts/build-dotfont.js` | BDF 字体 → 点阵 blob（参数 `<输入.bdf> [输出.dot]`） |

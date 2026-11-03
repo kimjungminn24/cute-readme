@@ -14,6 +14,8 @@ make your GitHub profile a tiny pixel home
 
 [빌더](https://kimjungminn24.github.io/cute-readme/)에서 `+ miniroom` 블록을 놓고 `Make a room` 을 누르세요. `Items` 탭에서 가구를 골라 바닥에 놓고, 색을 고르고, 말풍선을 답니다. `room.svg` 로 나옵니다.
 
+`Contribution Grass` 는 GitHub 잔디를 바닥에 깔아 줍니다. [templates/grass.yml](templates/grass.yml) 을 `.github/workflows/grass.yml` 로 복사하면 하루 한 번 `room.svg` 속 잔디를 최신으로 다시 그립니다.
+
 ## Assemble your README
 
 <img src="./docs/assemble.png" width="100%" alt="리드미 빌더">
