@@ -89,7 +89,23 @@ export function pointsAttr(list, geo, dy = 0) {
   }).join(' ');
 }
 
+// Walls and floor only change with the grid and theme, so dragging furniture reuses them.
+const shellCache = new Map();
+const SHELL_CACHE_MAX = 24;
+
 export function shell(geo, theme) {
+  const key = [geo.cols, geo.rows, geo.ox, geo.oy, geo.width, geo.height,
+    theme.wall, theme.floor, theme.wallStyle, theme.floorStyle].join('|');
+  let out = shellCache.get(key);
+  if (out === undefined) {
+    out = drawShell(geo, theme);
+    if (shellCache.size >= SHELL_CACHE_MAX) shellCache.delete(shellCache.keys().next().value);
+    shellCache.set(key, out);
+  }
+  return out;
+}
+
+function drawShell(geo, theme) {
   const wall = theme.wall ?? DEFAULT_THEME.wall;
   const floor = theme.floor ?? DEFAULT_THEME.floor;
 
