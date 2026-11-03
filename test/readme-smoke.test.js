@@ -40,3 +40,26 @@ test('adding from the palette grows the document and redraws', () => {
   assert.equal($('#blocks').children.length - before, 7, 'the fake DOM keeps old children, so count the new ones');
   assert.match($('#md').value, /\n\n---\n$/);
 });
+
+test('cards, badges and images with the same name in different blocks get distinct files', async () => {
+  const repo = (owner) => ({ owner, name: 'dotfiles', description: '', language: 'JavaScript', stars: 1, forks: 0 });
+  const gh = (color) => ({ label: 'GitHub', url: 'https://github.com/x', color });
+  const img = (name) => ({ type: 'image', file: { name, uri: 'data:image/png;base64,AA==' }, alt: '' });
+  const blocks = [
+    { type: 'repocards', repos: [repo('alice'), repo('bob')], theme: 'light', width: 400 },
+    { type: 'repocards', repos: [repo('alice')], theme: 'dark', width: 400 },
+    { type: 'links', items: [gh('#000000'), gh('#111111')] },
+    { type: 'links', items: [gh('#222222')] },
+    img('사진.png'), img('내 사진.png'),
+  ].map((b, i) => ({ id: 'z' + i, align: 'center', ...b }));
+  app.doc = blocks.map((b, i) => ({ id: 'zr' + i, cells: [[b]] }));
+
+  const files = [];
+  for (const b of blocks) files.push(...(await BLOCKS[b.type].files(b)).map((f) => f.name));
+  assert.equal(new Set(files).size, files.length, files.join(' '));
+  assert.ok(files.includes('assets/images/image.png') && files.includes('assets/images/image-2.png'), files.join(' '));
+  assert.ok(!files.some((f) => /\/\./.test(f)), 'no dotfiles');
+
+  const md = markdown();
+  for (const f of files) assert.ok(md.includes(f), `markdown points at ${f}`);
+});

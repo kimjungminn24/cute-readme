@@ -52,16 +52,31 @@ export function dropOnBlock(targetId, side, id) {
   t.cell.splice(t.i + (side === "bottom" ? 1 : 0), 0, b);
 }
 
+// Non-ASCII names such as 사진.png keep only the extension, so fall back to "image" rather than a dotfile.
+const cleanFileName = (s) => {
+  const name = String(s || "").replace(/[^\w.-]+/g, "-").replace(/^-+/, "");
+  const ext = name.match(/\.\w+$/)?.[0] ?? "";
+  return name.slice(0, name.length - ext.length).replace(/-+$/, "") ? name : "image" + ext;
+};
+
 export function imageName(b) {
-  const clean = (s) => (s || "image").replace(/[^\w.-]+/g, "-").replace(/^-+/, "");
-  const want = clean(b.file.name);
-  let n = 0;
+  return assetNames(b, "image", (x) => (x.file ? [cleanFileName(x.file.name)] : []))[0];
+}
+
+// Number repeated asset names across every block of one type, so no file in the zip overwrites another.
+export function assetNames(b, type, namesOf) {
+  const used = new Set();
   for (const x of allBlocks()) {
-    if (x.type !== "image" || !x.file || clean(x.file.name) !== want) continue;
-    n++;
-    if (x === b) return n === 1 ? want : want.replace(/(\.\w+)?$/, "-" + n + "$1");
+    if (x.type !== type) continue;
+    const names = namesOf(x).map((want) => {
+      let name = want;
+      for (let n = 2; used.has(name); n++) name = want.replace(/(\.\w+)?$/, "-" + n + "$1");
+      used.add(name);
+      return name;
+    });
+    if (x === b) return names;
   }
-  return want;
+  return namesOf(b);
 }
 
 export function ordinal(b, type, base) {

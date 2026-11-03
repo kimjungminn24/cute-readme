@@ -8,7 +8,7 @@ import { fetchRepo } from "../src/github.js";
 import { readDotFont } from "../src/dotfont.js";
 import { BLOCKS, ui, cleanups, changed } from "./readme-shared.js";
 import { esc, picMd } from "./readme-markdown.js";
-import { ordinal } from "./readme-doc.js";
+import { ordinal, assetNames } from "./readme-doc.js";
 
 BLOCKS.miniroom = {
   label: "miniroom",
@@ -84,7 +84,12 @@ BLOCKS.miniroom = {
   }] : []),
 };
 
-const linked = (items) => badgeFiles(items).filter(({ link }) => link.url && !/[:/]$/.test(link.url));
+const linkedFiles = (items) => badgeFiles(items).filter(({ link }) => link.url && !/[:/]$/.test(link.url));
+const linked = (b) => {
+  const names = assetNames(b, "links", (x) => linkedFiles(x.items).map((f) => f.file));
+  return linkedFiles(b.items).map((f, i) => ({ ...f, file: names[i] }));
+};
+const cardNames = (b) => assetNames(b, "repocards", (x) => x.repos.map(cardFile));
 
 BLOCKS.links = {
   label: "link badges",
@@ -151,7 +156,7 @@ BLOCKS.links = {
   },
 
   picture: true,
-  inline: (b, extra = "") => linked(b.items).map(({ link, file }) =>
+  inline: (b, extra = "") => linked(b).map(({ link, file }) =>
     '<a href="' + esc(link.url) + '"><img ' + extra + 'src="assets/links/' + file + '" alt="' + esc(link.label ?? "") + '"></a>')
     .join("\n  "),
   md: (b) => picMd(b),
@@ -169,7 +174,7 @@ BLOCKS.links = {
     return p;
   },
 
-  files: (b) => linked(b.items).map(({ link, file }) =>
+  files: (b) => linked(b).map(({ link, file }) =>
     ({ name: "assets/links/" + file, data: renderLinkBadge(link) })),
 };
 
@@ -252,9 +257,9 @@ BLOCKS.repocards = {
   },
 
   picture: true,
-  inline: (b, extra = "") => b.repos.map((repo) =>
+  inline: (b, extra = "") => b.repos.map((repo, i) =>
     '<a href="https://github.com/' + repo.owner + "/" + repo.name + '"><img ' + extra + 'src="assets/cards/' +
-    cardFile(repo) + '" alt="' + esc(repo.owner + "/" + repo.name) + '"></a>')
+    cardNames(b)[i] + '" alt="' + esc(repo.owner + "/" + repo.name) + '"></a>')
     .join("\n  "),
   md: (b) => picMd(b),
 
@@ -272,6 +277,8 @@ BLOCKS.repocards = {
     return p;
   },
 
-  files: (b) => b.repos.map((repo) =>
-    ({ name: "assets/cards/" + cardFile(repo), data: renderRepoCard(repo, cardOpts(b)) })),
+  files: (b) => {
+    const names = cardNames(b);
+    return b.repos.map((repo, i) => ({ name: "assets/cards/" + names[i], data: renderRepoCard(repo, cardOpts(b)) }));
+  },
 };
