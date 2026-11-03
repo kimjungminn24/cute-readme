@@ -89,3 +89,42 @@ export const grassblock = sprite((dots) => {
   for (const c of [0.1, 0.44, 0.74]) leftFace(dots, c, 8.5, c + 0.16, 10.5, shade(GRASS_TOP, 0.9));
   for (const r of [0.2, 0.52, 0.82]) rightFace(dots, r, 8.5, r + 0.16, 10.5, shade(GRASS_TOP, 0.7));
 });
+
+// A contribution graph laid on the floor: 7 weeks by 7 days of grass tiles; days with commits stand a dot taller.
+// One row per day, one digit per week (0 empty .. 4 busiest); a space is a day still to come.
+const ACTIVITY = [
+  '2103212',
+  '3012431',
+  '0231342',
+  '1324234',
+  '2143123',
+  '102134 ',
+  '021221 ',
+];
+const GRASS_FC = 3;
+const GRASS_FR = 3;
+const GRASS_LEVELS = ['#e3e6da', '#c3e3b1', '#98cf86', '#6fb167', '#4d8f52'];
+
+export const grassgraph = sprite((dots) => {
+  const at = P(GRASS_FC, GRASS_FR);
+  pxBox(dots, GRASS_FC, GRASS_FR, 1, '#efe6d4');
+
+  const weeks = ACTIVITY[0].length;
+  const days = ACTIVITY.length;
+  const pc = (GRASS_FC - 0.2) / weeks;
+  const pr = (GRASS_FR - 0.2) / days;
+  const s = Math.min(pc, pr) * 0.78;
+  const cells = [];
+  for (let d = 0; d < days; d++) {
+    for (let w = 0; w < weeks; w++) {
+      const level = '01234'.indexOf(ACTIVITY[d][w]);
+      if (level >= 0) cells.push({ c: 0.1 + w * pc + (pc + s) / 2, r: 0.1 + d * pr + (pr + s) / 2, level });
+    }
+  }
+  // Back to front, so nearer tiles cover the ones behind.
+  cells.sort((a, b) => a.c + a.r - (b.c + b.r));
+  for (const { c, r, level } of cells) {
+    const [dx, dy] = at(c, r);
+    pxBox(dots, s, s, level ? 2 : 1, GRASS_LEVELS[level], { dx, dy, lift: 1 });
+  }
+});

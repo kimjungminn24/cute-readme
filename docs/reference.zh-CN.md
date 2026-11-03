@@ -96,7 +96,7 @@
 
 | 种类 | id |
 |---|---|
-| 地板物品 | `teddy` `dog` `mushroom` `snowman` `donut` `bunny` `penguin` `gift` `rainbow` `bigheart` `ribbon` `ducky` `frog` `dino` `ghost` `rug` `bed` `chest` `bookshelf` `ore` `creeper` `dirt` `grassblock` `table` `desk` `tv` `fridge` `plant` `lamp` `stool` `drawer` `cactus` `sofa` `books` `turntable` `grass` `flowers` `tree` `sakura` |
+| 地板物品 | `teddy` `dog` `mushroom` `snowman` `donut` `bunny` `penguin` `gift` `rainbow` `bigheart` `ribbon` `ducky` `frog` `dino` `ghost` `rug` `bed` `chest` `bookshelf` `ore` `creeper` `dirt` `grassblock` `grassgraph` `table` `desk` `tv` `fridge` `plant` `lamp` `stool` `drawer` `cactus` `sofa` `books` `turntable` `grass` `flowers` `tree` `sakura` |
 | 能当支撑的物品（有 `top`） | `bed` `chest` `ore` `dirt` `grassblock` `table` `desk` `fridge` `stool` `drawer` `books` |
 | 墙饰 | `window` `painting` |
 | 特效 | `heart` `note` `zzz` `sweat` `star` `question` `exclaim` |

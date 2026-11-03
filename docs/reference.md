@@ -96,7 +96,7 @@ Look (`style`) and motion (`anim`) are chosen separately. A speech bubble can si
 
 | Kind | id |
 |---|---|
-| Floor items | `teddy` `dog` `mushroom` `snowman` `donut` `bunny` `penguin` `gift` `rainbow` `bigheart` `ribbon` `ducky` `frog` `dino` `ghost` `rug` `bed` `chest` `bookshelf` `ore` `creeper` `dirt` `grassblock` `table` `desk` `tv` `fridge` `plant` `lamp` `stool` `drawer` `cactus` `sofa` `books` `turntable` `grass` `flowers` `tree` `sakura` |
+| Floor items | `teddy` `dog` `mushroom` `snowman` `donut` `bunny` `penguin` `gift` `rainbow` `bigheart` `ribbon` `ducky` `frog` `dino` `ghost` `rug` `bed` `chest` `bookshelf` `ore` `creeper` `dirt` `grassblock` `grassgraph` `table` `desk` `tv` `fridge` `plant` `lamp` `stool` `drawer` `cactus` `sofa` `books` `turntable` `grass` `flowers` `tree` `sakura` |
 | Items you can stack on (has `top`) | `bed` `chest` `ore` `dirt` `grassblock` `table` `desk` `fridge` `stool` `drawer` `books` |
 | Wall pieces | `window` `painting` |
 | Effects | `heart` `note` `zzz` `sweat` `star` `question` `exclaim` |
