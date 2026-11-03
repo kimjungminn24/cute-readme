@@ -5,6 +5,13 @@ on:
     - cron: '0 18 * * 0'
   push:
     branches: [main]
+    # Only redraw when the suika renderer or this workflow changes; the weekly run covers new contributors.
+    paths:
+      - scripts/render-suika.js
+      - src/suika.js
+      - src/svg.js
+      - src/github.js
+      - .github/workflows/suika.yml
   workflow_dispatch:
 
 env:
