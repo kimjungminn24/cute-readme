@@ -194,7 +194,8 @@ function headParts(L) {
     ic.book(PAD, headY, t.text),
     text.write(title, PAD + ICON + 8, headY + 13, titleFill, 15, { bold: true }),
     chipBox(w - PAD - chipW, headY + 1, chipW, 18)
-      + text.write(chipText, w - PAD - chipW / 2, headY + 14, t.chip, 11, { mid: true }),
+      // Dot glyphs fill the full 11 rows above the baseline, so they sit 2 lower to centre in the chip.
+      + text.write(chipText, w - PAD - chipW / 2, headY + (text.drawn(chipText) ? 16 : 14), t.chip, 11, { mid: true }),
   ];
 }
 
