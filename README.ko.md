@@ -42,6 +42,10 @@ make your GitHub profile a tiny pixel home
 - 눌러도 안 열리면: 그림 전체를 `<a>` 로 감쌌는지 봅니다. SVG 안의 `<a>` 는 무시됩니다.
 - 안 움직이면: 브라우저나 OS 에서 동작 줄이기가 켜져 있는지 봅니다.
 
+## Docs
+
+방 JSON, 카탈로그, 모든 옵션은 [레퍼런스](docs/reference.ko.md) 에 있습니다 · [어떻게 만들었나](docs/how-it-works.ko.md) · [미니미](docs/minimi.md)
+
 ## License
 
 MIT ([LICENSE](LICENSE)). [assets/galmuri11.dot](assets/galmuri11.dot) 만 [Galmuri11](https://github.com/quiple/galmuri) 글꼴에서 왔고 SIL OFL 1.1 을 따릅니다. 이 도구가 만든 SVG 에는 아무 제약이 없습니다.

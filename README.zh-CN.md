@@ -42,6 +42,10 @@ make your GitHub profile a tiny pixel home
 - 点了没反应：确认整张图被 `<a>` 包住。SVG 内部的 `<a>` 会被忽略。
 - 没有动画：确认浏览器或系统没有开启减少动态效果。
 
+## Docs
+
+房间 JSON、素材目录和全部选项见[参考](docs/reference.zh-CN.md) · [是怎么做的](docs/how-it-works.zh-CN.md) · [迷你小人](docs/minimi.md)
+
 ## License
 
 MIT ([LICENSE](LICENSE))。只有 [assets/galmuri11.dot](assets/galmuri11.dot) 来自 [Galmuri11](https://github.com/quiple/galmuri) 字体，遵循 SIL OFL 1.1。本工具生成的 SVG 没有任何限制。

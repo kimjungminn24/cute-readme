@@ -42,6 +42,10 @@ Drop a `+ repo cards` block and enter `owner/repo`. The card above is the `pixel
 - Clicking does nothing: wrap the whole image in an `<a>`. An `<a>` inside the SVG is ignored.
 - Nothing animates: reduce motion is on in the browser or the OS.
 
+## Docs
+
+[Reference](docs/reference.md) for the room JSON, catalog and every option · [How it works](docs/how-it-works.md) · [Minimi](docs/minimi.md)
+
 ## License
 
 MIT ([LICENSE](LICENSE)). [assets/galmuri11.dot](assets/galmuri11.dot) comes from the [Galmuri11](https://github.com/quiple/galmuri) font and is under SIL OFL 1.1. The SVGs this tool makes carry no restrictions.
