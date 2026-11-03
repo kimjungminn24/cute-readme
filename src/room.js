@@ -163,11 +163,13 @@ export function renderRoom(data = {}, options = {}) {
     const flip = it.flip ? ' scale(-1,1)' : '';
     const data_ = editable ? ` data-kind="item" data-idx="${idx}"` : '';
 
-    const y = p.y - (it.lift ?? 0) * SCALE;
+    // Fractional footprints (0.6, 0.8 tiles) would land sprites between screen pixels and blur their edges.
+    const x = Math.round(p.x);
+    const y = Math.round(p.y - (it.lift ?? 0) * SCALE);
     drawables.push({
       layer: def.layer,
       depth: col + def.fc + row + def.fr,
-      markup: `<g${data_} transform="translate(${p.x} ${y})${flip}">${def.art}</g>`,
+      markup: `<g${data_} transform="translate(${x} ${y})${flip}">${def.art}</g>`,
     });
   });
 
