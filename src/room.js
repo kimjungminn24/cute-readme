@@ -166,10 +166,12 @@ export function renderRoom(data = {}, options = {}) {
     // Fractional footprints (0.6, 0.8 tiles) would land sprites between screen pixels and blur their edges.
     const x = Math.round(p.x);
     const y = Math.round(p.y - (it.lift ?? 0) * SCALE);
+    // Items fed by room data (the contribution grass) draw from it when it is there.
+    const art = def.live?.(data) ?? def.art;
     drawables.push({
       layer: def.layer,
       depth: col + def.fc + row + def.fr,
-      markup: `<g${data_} transform="translate(${x} ${y})${flip}">${def.art}</g>`,
+      markup: `<g${data_} transform="translate(${x} ${y})${flip}">${art}</g>`,
     });
   });
 

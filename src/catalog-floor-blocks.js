@@ -163,3 +163,43 @@ export const GRASS_SQUARE = grassSize(SQUARE_WEEKS);
 export const GRASS_LONG = grassSize(LONG_WEEKS);
 export const grassgraph = grassField(SQUARE_WEEKS);
 export const grasslong = grassField(LONG_WEEKS);
+
+const DAY_MS = 86_400_000;
+const isoDay = (ms) => new Date(ms).toISOString().slice(0, 10);
+
+// Turn calendar days into graph rows: one row per weekday (Sunday first), one digit per week, the last
+// column being the week of the latest day. Days after it are spaces, days missing from the list are 0.
+export function grassRows(days, weeks = LONG_WEEKS[0].length) {
+  const levels = new Map(days.map((d) => [d.date, d.level]));
+  const last = Date.parse(`${days.at(-1).date}T00:00:00Z`);
+  const lastSunday = last - new Date(last).getUTCDay() * DAY_MS;
+  const rows = Array.from({ length: 7 }, () => '');
+  for (let w = 0; w < weeks; w++) {
+    const sunday = lastSunday - (weeks - 1 - w) * 7 * DAY_MS;
+    for (let d = 0; d < 7; d++) {
+      const day = sunday + d * DAY_MS;
+      rows[d] += day > last ? ' ' : String(levels.get(isoDay(day)) ?? 0);
+    }
+  }
+  return rows;
+}
+
+const validRows = (rows) =>
+  Array.isArray(rows) && rows.length === 7 && rows.every((r) => typeof r === 'string' && /^[0-4 ]+$/.test(r))
+  && rows.every((r) => r.length === rows[0].length);
+
+const liveArt = new Map();
+// A room that carries real calendar rows (room.grass.rows) draws those instead of the sample pattern.
+const liveGrass = (weeks) => (room) => {
+  const rows = room?.grass?.rows;
+  if (!validRows(rows) || rows[0].length < weeks) return null;
+  const activity = rows.map((r) => r.slice(-weeks));
+  const key = activity.join('|');
+  if (!liveArt.has(key)) {
+    if (liveArt.size >= 16) liveArt.delete(liveArt.keys().next().value);
+    liveArt.set(key, grassField(activity));
+  }
+  return liveArt.get(key);
+};
+export const grassgraphLive = liveGrass(SQUARE_WEEKS[0].length);
+export const grasslongLive = liveGrass(LONG_WEEKS[0].length);

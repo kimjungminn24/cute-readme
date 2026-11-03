@@ -14,6 +14,7 @@
     "render:room": "node scripts/render-room.js",
     "render:cards": "node scripts/render-cards.js",
     "render:suika": "node scripts/render-suika.js",
+    "render:grass": "node scripts/render-grass.js",
     "import": "node scripts/import-png.js",
     "editor": "node scripts/serve.js"
   }

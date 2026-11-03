@@ -90,3 +90,24 @@ export async function fetchRepo({ owner, repo, token }) {
     fork: !!r.fork,
   };
 }
+
+// The profile's contribution calendar, as the page shows it: private days count too when the user shares them.
+export function parseContributionDays(html) {
+  const days = [];
+  for (const tag of String(html).match(/<td\b[^>]*\bContributionCalendar-day\b[^>]*>/g) ?? []) {
+    const date = tag.match(/\bdata-date="(\d{4}-\d{2}-\d{2})"/)?.[1];
+    const level = Number(tag.match(/\bdata-level="([0-4])"/)?.[1]);
+    if (date && Number.isInteger(level)) days.push({ date, level });
+  }
+  return days.sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
+}
+
+export async function fetchContributionDays(user) {
+  if (!/^[A-Za-z0-9-]{1,39}$/.test(String(user ?? ''))) throw new Error(`not a GitHub user name: ${user}`);
+  const res = await request(`https://github.com/users/${user}/contributions`, { Accept: 'text/html' });
+  if (res.status === 404) throw new Error(`no such user: ${user}`);
+  if (!res.ok) throw new Error(`contributions fetch failed (${res.status})`);
+  const days = parseContributionDays(await res.text());
+  if (!days.length) throw new Error('found no days in the contribution graph; GitHub may have changed the page');
+  return days;
+}
