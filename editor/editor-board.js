@@ -5,7 +5,7 @@ import {
 } from '../src/room.js';
 import { FLOOR_ITEMS, WALL_ITEMS, EFFECTS, SKILLS } from '../src/catalog.js';
 import { topItemAt, stackLift, moveToPoint, cellAtPoint } from './editor-core.js';
-import { $, app, ui, render } from './editor-shared.js';
+import { $, app, ui, render, syncRoom } from './editor-shared.js';
 
 let tool = null;
 
@@ -338,8 +338,10 @@ stage.addEventListener('pointerdown', (e) => {
 });
 
 function endDrag() {
+  const moved = drag?.moved;
   drag = null;
   stage.classList.remove('dragging');
+  if (moved) syncRoom();
 }
 
 stage.addEventListener('pointermove', (e) => {
@@ -353,7 +355,7 @@ stage.addEventListener('pointermove', (e) => {
     stage.setPointerCapture(e.pointerId);
     stage.classList.add('dragging');
   }
-  if (moveTo(e, drag)) render();
+  if (moveTo(e, drag)) render({ sync: false });
 });
 
 stage.addEventListener('pointerup', (e) => {

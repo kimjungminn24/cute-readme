@@ -38,10 +38,11 @@ export function syncRoom() {
   ui.roomChanged?.();
 }
 
-export function render() {
+// While dragging, redraw only; saving and telling the builder wait for the drop.
+export function render({ sync = true } = {}) {
   stage.innerHTML = renderRoom(app.state, { editable: true, title: 'preview' });
   ui.markHeld?.();
-  syncRoom();
+  if (sync) syncRoom();
 }
 
 export function bindScaleSlider(el, out, set) {
