@@ -1,5 +1,4 @@
 import { sprite, drawAscii, hash } from './pixel.js';
-import { OAK, OAK_DARK } from './catalog-base.js';
 import * as WAI from './catalog-wall-ai.js';
 
 const SHEAR = { left: -1, right: 1, floor: 0 };

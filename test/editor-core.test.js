@@ -123,6 +123,19 @@ test('old names bubbles and typing migrate to texts and anim', () => {
   assert.ok(!('typing' in kept.texts[0]));
 });
 
+test('pieces removed from the catalog are dropped when a room opens', () => {
+  const s = normalizeRoom({
+    items: [{ id: 'bed', col: 0, row: 0 }, { id: 'furnace', col: 1, row: 1 }, null],
+    wallItems: [{ id: 'window', wall: 'left', u: 1 }, { id: 'torch', wall: 'left', u: 2 }],
+    effects: [{ id: 'heart', col: 0, row: 0 }, { id: 'gone', col: 0, row: 0 }],
+    skills: [{ id: 'js', col: 0, row: 0 }, { id: 'gone', col: 0, row: 0 }],
+  });
+  assert.deepEqual(s.items.map((o) => o.id), ['bed']);
+  assert.deepEqual(s.wallItems.map((o) => o.id), ['window']);
+  assert.deepEqual(s.effects.map((o) => o.id), ['heart']);
+  assert.deepEqual(s.skills.map((o) => o.id), ['js']);
+});
+
 test('the old person bubble becomes a free text at that spot', () => {
   const s = normalizeRoom({ person: { col: 3, row: 4, bubble: 'yo' } });
   assert.ok(!('bubble' in s.person));

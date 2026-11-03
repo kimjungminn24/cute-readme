@@ -244,11 +244,7 @@
 | `npm run render:suika` | 기여자 수박게임 → SVG (인자로 `owner/repo [출력] [테마]`) |
 | `npm run preview:suika` | 수박게임 → `suika.svg` (인자로 `owner/repo`, `--theme=all`, `--width=`) |
 | `npm run import` | 픽셀아트 PNG → 도트 문자열 (인자로 `그림.png --kind effect`) |
-| `npm run gen:pixellab` | PixelLab로 가구 한 개 뽑기 (인자로 `bed "a wooden single bed..." --w 72 --h 56 --model pixflux --guidance 11 --out 폴더`). 키는 `PIXELLAB_API_KEY` 환경 변수 |
-| `npm run import:pixellab` | PixelLab PNG → 바닥 아이템 모듈 (인자로 `폴더 bed sofa`), 그림자 제거 |
-| `npm run gen:character` | PixelLab 4방향 캐릭터 뽑기 (인자로 `bob_tee "cute chibi..." --size 48 --seed 4 --out 폴더`) |
-| `npm run edit:character` | 확정 그림(앞·뒤)에서 PixelLab 편집으로 머리·의상 조합 만들기 (인자로 `폴더 --base bob_tee`). 새로 뽑는 것과 달리 얼굴이 완전히 같다 |
-| `npm run import:character` | `<머리>_<의상>-south/north.png` 들 → `pixel` 체형 모듈 (인자로 `폴더`). 픽셀마다 역할(피부·머리·상의·하의·볼터치)과 밝기 비율을 붙여 색 선택기가 먹게 만듭니다 |
+| `node scripts/preview-minimi.js` | 미니미 모음표 → `docs/minimi-gallery.html` |
 | `node scripts/build-dotfont.js` | BDF 글꼴 → 도트 블롭 (인자로 `<입력.bdf> [출력.dot]`) |
 | `npm test` | `node --test` |
 
@@ -290,29 +286,36 @@ renderLinkBadge({ label: 'Blog' }, { scale: 2 });
 ## 구조
 
 ```
-src/catalog.js    카탈로그 배럴 (아래 구역 파일을 다시 내보냄)
-src/catalog-base.js    좌표 헬퍼 + 기본 재질 색
-src/catalog-floor.js   바닥 아이템 목록 (FLOOR_ITEMS)
-src/catalog-floor-*.js 바닥 아이템 그림 (blocks, furniture, moving, garden, plushies)
-src/catalog-wall.js    벽 장식
-src/catalog-effects.js 이펙트
-src/catalog-skills.js  스킬 뱃지
-src/catalog-person.js  캐릭터 조립 (SHAPES + personArt)
-src/catalog-person-*.js 캐릭터 조각 (parts, face, hair, outfits)
-src/room.js       방 렌더러 (아이소메트릭 배치 + z정렬)
-src/room-*.js     방 조각 (styles, geometry, text, weather)
-src/pixel.js      도트 격자 → 런 병합 → 색상별 path
-src/dotfont.js    글자 비트맵 → 도트 path (도트 테마의 글자)
-src/iso.js        아이소메트릭 타일 상수, 명암
-src/svg.js        XML 이스케이프, 폭 계산, 줄바꿈, 출력 배율
-src/links.js      링크 뱃지 렌더러 + 3x5 도트 폰트, README 스니펫
-src/repocard.js   리포지토리 카드 렌더러 + 언어색
-src/repocard-themes.js 리포 카드 테마 표 + 무늬 도형
-src/suika.js      기여자 수박게임 (크기 사다리 + 쌓기 물리 + 카드)
-src/github.js     리포, 기여자, 아바타 조회
-src/png.js        PNG 디코더 (node:zlib만 사용)
-src/ascii.js      픽셀 격자 ↔ 도트 문자열
-editor/           브라우저 에디터 (editor.js가 엔트리, 뷰별 모듈 + 순수 로직 editor-core.js)
-scripts/          CLI 진입점
-templates/        Actions 워크플로 템플릿
+src/catalog.js               카탈로그 배럴 (아래 구역 파일을 다시 내보냄)
+src/catalog-base.js          아이소메트릭 좌표 헬퍼 + 돌 색
+src/catalog-floor.js         바닥 아이템 목록 (FLOOR_ITEMS)
+src/catalog-floor-ai.js      PixelLab로 만든 바닥 아이템 그림 (floor-ai/에 하나씩)
+src/catalog-floor-blocks.js  손으로 그린 블록 아이템 (광석, 크리퍼, 흙, 잔디 블록)
+src/catalog-wall.js          벽 장식
+src/catalog-wall-ai.js       PixelLab로 만든 벽 장식 그림 (wall-ai/)
+src/catalog-effects.js       이펙트
+src/catalog-skills.js        스킬 뱃지
+src/catalog-lines.js         리드미 빌더의 줄 스티커
+src/catalog-person.js        캐릭터 API (SHAPES + personArt)
+src/catalog-person-face.js   표정, 소품, 크기
+src/person-minimi.js         미니미 렌더러 (머리 × 옷 × 자세를 공통 기준점에 찍음)
+src/room.js                  방 렌더러 (아이소메트릭 배치 + z정렬)
+src/room-*.js                방 조각 (styles, geometry, text, weather)
+src/pixel.js                 도트 격자 → 런 병합 → 색상별 path
+src/dotfont.js               글자 비트맵 → 도트 path (도트 테마의 글자)
+src/iso.js                   아이소메트릭 타일 상수, 명암
+src/svg.js                   XML 이스케이프, 폭 계산, 줄바꿈, 출력 배율
+src/links.js                 링크 뱃지 렌더러 + 3x5 도트 폰트, README 스니펫
+src/repocard.js              리포지토리 카드 렌더러 + 언어색
+src/repocard-themes.js       리포 카드 테마 표 + 무늬 도형
+src/suika.js                 기여자 수박게임 (크기 사다리 + 쌓기 물리 + 카드)
+src/github.js                리포, 기여자, 아바타 조회
+src/png.js                   PNG 디코더 (node:zlib만 사용)
+src/ascii.js                 픽셀 격자 ↔ 도트 문자열
+src/zip.js                   빌더 다운로드용 zip 작성기
+index.html                   리드미 빌더 페이지 (엔트리: readme/readme.js)
+readme/                      리드미 빌더 (블록, 보드, 미리보기, 마크다운 내보내기)
+editor/                      빌더 안에 들어가는 방 편집기 (순수 로직은 editor-core.js)
+scripts/                     CLI 진입점
+templates/                   Actions 워크플로 템플릿
 ```

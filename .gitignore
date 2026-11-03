@@ -6,7 +6,6 @@ node_modules/
 /suika.svg
 /suika-*.svg
 /suika*.png
-.claude/settings.local.json
 
 # 로컬 작업 파일
 .claude/

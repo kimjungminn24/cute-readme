@@ -244,11 +244,7 @@
 | `npm run render:suika` | 西瓜游戏贡献者 → SVG（参数 `owner/repo [输出] [主题]`） |
 | `npm run preview:suika` | 西瓜游戏 → `suika.svg`（参数 `owner/repo`、`--theme=all`、`--width=`） |
 | `npm run import` | 像素画 PNG → 点阵字符串（参数 `图.png --kind effect`） |
-| `npm run gen:pixellab` | 用 PixelLab 出一件家具（参数 `bed "a wooden single bed..." --w 72 --h 56 --model pixflux --guidance 11 --out 目录`）。密钥放在 `PIXELLAB_API_KEY` |
-| `npm run import:pixellab` | PixelLab PNG → 地板物品模块（参数 `目录 bed sofa`），去掉阴影 |
-| `npm run gen:character` | 用 PixelLab 出四方向角色（参数 `bob_tee "cute chibi..." --size 48 --seed 4 --out 目录`） |
-| `npm run edit:character` | 用 PixelLab 编辑功能从定稿的正反面图生成发型×服装组合（参数 `目录 --base bob_tee`）。与重新出图不同，脸完全一致 |
-| `npm run import:character` | `<发型>_<服装>-south/north.png` → `pixel` 体型模块（参数 `目录`）。给每个像素标上角色（皮肤、头发、上装、下装、腮红）和亮度比例，让颜色选择器生效 |
+| `node scripts/preview-minimi.js` | 迷你小人总览 → `docs/minimi-gallery.html` |
 | `node scripts/build-dotfont.js` | BDF 字体 → 点阵 blob（参数 `<输入.bdf> [输出.dot]`） |
 | `npm test` | `node --test` |
 
@@ -290,27 +286,36 @@ renderLinkBadge({ label: 'Blog' }, { scale: 2 });
 ## 目录结构
 
 ```
-src/catalog.js    素材总出口（重新导出下面的分区文件）
-src/catalog-base.js    坐标辅助 + 基础材质色
-src/catalog-floor.js   地板物品清单（FLOOR_ITEMS）
-src/catalog-floor-*.js 地板物品图形（blocks／furniture／moving／garden／plushies）
-src/catalog-wall.js    墙饰
-src/catalog-effects.js 特效
-src/catalog-skills.js  技能徽章
-src/catalog-person.js  角色组装（SHAPES + personArt）
-src/catalog-person-*.js 角色部件（parts／face／hair／outfits）
-src/room.js       房间渲染器（等距摆放 + z 排序）
-src/room-*.js     房间部件（styles／geometry／text／weather）
-src/pixel.js      点阵网格 → 合并连续块 → 按颜色输出 path
-src/dotfont.js    字形位图 → 点阵 path（点阵主题的文字）
-src/iso.js        等距瓦片常量、明暗
-src/svg.js        XML 转义、宽度计算、换行、输出缩放
-src/links.js      链接徽章渲染器 + 3x5 点阵字体、README 代码片段
-src/repocard.js   仓库卡片渲染器 + 主题和语言颜色
-src/github.js     仓库、贡献者和头像查询
-src/png.js        PNG 解码器（只用 node:zlib）
-src/ascii.js      像素网格 ↔ 点阵字符串
-editor/           浏览器编辑器（editor.js 是入口，按视图分模块，纯逻辑在 editor-core.js）
-scripts/          CLI 入口
-templates/        Actions 工作流模板
+src/catalog.js               素材总出口（重新导出下面的分区文件）
+src/catalog-base.js          等距坐标辅助 + 石头颜色
+src/catalog-floor.js         地板物品清单（FLOOR_ITEMS）
+src/catalog-floor-ai.js      用 PixelLab 制作的地板物品图形（floor-ai/ 下每件一个文件）
+src/catalog-floor-blocks.js  手绘方块物品（矿石、苦力怕、泥土、草方块）
+src/catalog-wall.js          墙饰
+src/catalog-wall-ai.js       用 PixelLab 制作的墙饰图形（wall-ai/）
+src/catalog-effects.js       特效
+src/catalog-skills.js        技能徽章
+src/catalog-lines.js         README 生成器的线条贴纸
+src/catalog-person.js        角色 API（SHAPES + personArt）
+src/catalog-person-face.js   表情、配饰、尺寸
+src/person-minimi.js         迷你小人渲染器（发型 × 服装 × 姿势共用锚点）
+src/room.js                  房间渲染器（等距摆放 + z 排序）
+src/room-*.js                房间部件（styles／geometry／text／weather）
+src/pixel.js                 点阵网格 → 合并连续块 → 按颜色输出 path
+src/dotfont.js               字形位图 → 点阵 path（点阵主题的文字）
+src/iso.js                   等距瓦片常量、明暗
+src/svg.js                   XML 转义、宽度计算、换行、输出缩放
+src/links.js                 链接徽章渲染器 + 3x5 点阵字体、README 代码片段
+src/repocard.js              仓库卡片渲染器 + 语言颜色
+src/repocard-themes.js       仓库卡片主题表 + 花纹图形
+src/suika.js                 贡献者合成西瓜（尺寸阶梯 + 堆叠物理 + 卡片）
+src/github.js                仓库、贡献者和头像查询
+src/png.js                   PNG 解码器（只用 node:zlib）
+src/ascii.js                 像素网格 ↔ 点阵字符串
+src/zip.js                   生成器下载用的 zip 写入器
+index.html                   README 生成器页面（入口：readme/readme.js）
+readme/                      README 生成器（区块、画板、预览、导出 Markdown）
+editor/                      嵌在生成器里的房间编辑器（纯逻辑在 editor-core.js）
+scripts/                     CLI 入口
+templates/                   Actions 工作流模板
 ```

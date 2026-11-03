@@ -10,7 +10,7 @@ on:
 
 env:
   TARGET_REPO: ''
-  GIT_ROOM_REPO: kimjungminn24/cute-readme
+  CUTE_README_REPO: kimjungminn24/cute-readme
   SUIKA_THEME: suika
   SUIKA_TITLE: Contributors
   SUIKA_LIMIT: 15
@@ -35,7 +35,7 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
-          repository: ${{ env.GIT_ROOM_REPO }}
+          repository: ${{ env.CUTE_README_REPO }}
           path: .cute-readme
 
       - uses: actions/setup-node@v4

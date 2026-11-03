@@ -1,6 +1,6 @@
 import { sprite, pxBox, drawAscii, fillPoly } from './pixel.js';
 import { shade } from './iso.js';
-import { off, P, OAK, OAK_DARK, STONE } from './catalog-base.js';
+import { P, STONE } from './catalog-base.js';
 
 /* c and r are face coordinates from 0 to 1; z is height in pixels. */
 const CUBE_H = 12;
@@ -11,39 +11,6 @@ const leftFace = (dots, c0, z0, c1, z1, color) =>
   fillPoly(dots, [pc(c0, 1, z0), pc(c1, 1, z0), pc(c1, 1, z1), pc(c0, 1, z1)], color);
 const rightFace = (dots, r0, z0, r1, z1, color) =>
   fillPoly(dots, [pc(1, r0, z0), pc(1, r1, z0), pc(1, r1, z1), pc(1, r0, z1)], color);
-
-export const rug = sprite((dots) => {
-  pxBox(dots, 2, 2, 1, '#c56f6b', { noise: 0.07 });
-  pxBox(dots, 1.4, 1.4, 0.8, '#ad6561', { ...off(2, 2, 1.7, 1.7), lift: 0.6, noise: 0.06 });
-});
-
-export const bed = sprite((dots) => {
-  pxBox(dots, 2, 1, 2.5, OAK_DARK, { noise: 0.08 });
-  pxBox(dots, 2, 1, 3, '#c56f6b', { lift: 2.5, noise: 0.06 });
-  pxBox(dots, 0.55, 1, 2.5, '#f3ede4', { ...off(2, 1, 0.55, 1), lift: 5.5 });
-});
-
-export const chest = sprite((dots) => {
-  const o = off(1, 1, 0.92, 0.92);
-  pxBox(dots, 0.84, 0.84, 8, '#b99771', { ...o, noise: 0.09 });
-  pxBox(dots, 0.84, 0.84, 3, '#c5a07a', { ...o, lift: 8, noise: 0.09 });
-  drawAscii(dots, ['GG', 'GG', 'DD'], { G: '#ddc175', D: '#554537' }, { dx: 0, dy: -5 });
-});
-
-export const bookshelf = sprite((dots) => {
-  pxBox(dots, 1, 1, 12, OAK, { noise: 0.08 });
-  const p = P(1, 1);
-  const shelf = (z1, z2) => {
-    fillPoly(dots, [p(0.08, 1, z2), p(0.92, 1, z2), p(0.92, 1, z1), p(0.08, 1, z1)], '#86705b');
-    const colors = ['#c88577', '#8a99cc', '#ddc175', '#a0b898', '#b98dcf'];
-    colors.forEach((c, i) => {
-      const a = 0.1 + i * 0.16;
-      fillPoly(dots, [p(a, 1, z2 - 0.5), p(a + 0.13, 1, z2 - 0.5), p(a + 0.13, 1, z1), p(a, 1, z1)], c);
-    });
-  };
-  shelf(6.5, 11);
-  shelf(1, 5.5);
-});
 
 const DIAMOND = '#89d8ca';
 

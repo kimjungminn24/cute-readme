@@ -1,7 +1,7 @@
 import { geometry, gridCell, DEFAULT_TEXT_STYLE } from '../src/room.js';
 import { TILE_HALF_W } from '../src/iso.js';
 import { SCALE } from '../src/pixel.js';
-import { FLOOR_ITEMS, DEFAULT_PERSON } from '../src/catalog.js';
+import { FLOOR_ITEMS, WALL_ITEMS, EFFECTS, SKILLS, DEFAULT_PERSON } from '../src/catalog.js';
 import { isHexColor } from '../src/svg.js';
 
 export const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
@@ -105,6 +105,12 @@ export function normalizeRoom(state) {
   state.effects ??= [];
   state.skills ??= [];
   state.links ??= [];
+
+  // Drop pieces removed from the catalog so they do not linger unseen and unclickable.
+  state.items = state.items.filter((o) => FLOOR_ITEMS[o?.id]);
+  state.wallItems = state.wallItems.filter((o) => WALL_ITEMS[o?.id]);
+  state.effects = state.effects.filter((o) => EFFECTS[o?.id]);
+  state.skills = state.skills.filter((o) => SKILLS[o?.id]);
 
   state.texts ??= state.bubbles ?? [];
   delete state.bubbles;

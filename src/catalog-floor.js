@@ -1,10 +1,5 @@
-import { rug, chest, bookshelf, ore, creeper, dirt, grassblock } from './catalog-floor-blocks.js';
-import { bed } from './catalog-floor-art.js';
-import { table, desk, tv, fridge, stool, drawer, books, cactus } from './catalog-floor-furniture.js';
-import { turntable, plant, lamp } from './catalog-floor-moving.js';
-import { tree, sakura, grass, flowers } from './catalog-floor-garden.js';
+import { ore, creeper, dirt, grassblock } from './catalog-floor-blocks.js';
 import * as AI from './catalog-floor-ai.js';
-import { teddy, mushroom, snowman, donut, bunny, penguin, gift, dog, ducky, frog, dino, ghost } from './catalog-floor-plushies.js';
 
 export const FLOOR_ITEMS = {
   rug: { name: 'Carpet', fc: 2, fr: 2, layer: 0, art: AI.rug },

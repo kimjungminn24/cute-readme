@@ -244,11 +244,7 @@ The jar is a U, open at the top. A lighter line runs inside the wall and a shado
 | `npm run render:suika` | Suika contributors → SVG (args: `owner/repo [out] [theme]`) |
 | `npm run preview:suika` | Suika → `suika.svg` (args: `owner/repo`, `--theme=all` / `--width=`) |
 | `npm run import` | Pixel-art PNG → dot strings (args: `art.png --kind effect`) |
-| `npm run gen:pixellab` | Draw one piece of furniture with PixelLab (args: `bed "a wooden single bed..." --w 72 --h 56 --model pixflux --guidance 11 --out dir`). Key in `PIXELLAB_API_KEY` |
-| `npm run import:pixellab` | PixelLab PNG → floor item module (args: `dir bed sofa`), drops the shadow |
-| `npm run gen:character` | Draw a four-direction character with PixelLab (args: `bob_tee "cute chibi..." --size 48 --seed 4 --out dir`) |
-| `npm run edit:character` | Build hair × outfit combinations from the approved sprite pair with PixelLab's edit tool (args: `dir --base bob_tee`). Unlike regenerating, the face stays identical |
-| `npm run import:character` | `<hair>_<outfit>-south/north.png` files → the `pixel` shape module (args: `dir`). Tags every pixel with a role (skin, hair, top, bottom, blush) and a brightness ratio so the colour pickers work |
+| `node scripts/preview-minimi.js` | Minimi contact sheet → `docs/minimi-gallery.html` |
 | `node scripts/build-dotfont.js` | BDF font → dot blob (args: `<in.bdf> [out.dot]`) |
 | `npm test` | `node --test` |
 
@@ -290,28 +286,36 @@ Only `width`/`height` on the `<svg>` are multiplied; `viewBox` stays as it is. N
 ## Layout
 
 ```
-src/catalog.js    catalog barrel (re-exports the files below)
-src/catalog-base.js    coordinate helpers + base material colours
-src/catalog-floor.js   floor item list (FLOOR_ITEMS)
-src/catalog-floor-*.js floor item drawings (blocks, furniture, moving, garden, plushies)
-src/catalog-wall.js    wall pieces
-src/catalog-effects.js effects
-src/catalog-skills.js  skill badges
-src/catalog-person.js  character assembly (SHAPES + personArt)
-src/catalog-person-*.js character pieces (parts, face, hair, outfits)
-src/room.js       room renderer (isometric placement + z-sorting)
-src/room-*.js     room pieces (styles, geometry, text, weather)
-src/pixel.js      dot grid → run merging → one path per colour
-src/dotfont.js    glyph bitmaps → dot paths (text in the pixel theme)
-src/iso.js        isometric tile constants, shading
-src/svg.js        XML escaping, width measurement, wrapping, output scale
-src/links.js      link badge renderer + 3x5 dot font, README snippet
-src/repocard.js   repository card renderer + language colours
-src/repocard-themes.js repo card theme table + pattern shapes
-src/github.js     repo, contributor and avatar lookups
-src/png.js        PNG decoder (node:zlib only)
-src/ascii.js      pixel grid ↔ dot strings
-editor/           browser editor (editor.js is the entry; one module per view + pure logic in editor-core.js)
-scripts/          CLI entry points
-templates/        Actions workflow templates
+src/catalog.js               catalog barrel (re-exports the files below)
+src/catalog-base.js          isometric coordinate helper + stone colour
+src/catalog-floor.js         floor item list (FLOOR_ITEMS)
+src/catalog-floor-ai.js      floor item art made with PixelLab (one file each in floor-ai/)
+src/catalog-floor-blocks.js  hand-drawn block items (ore, creeper, dirt, grass block)
+src/catalog-wall.js          wall pieces
+src/catalog-wall-ai.js       wall art made with PixelLab (wall-ai/)
+src/catalog-effects.js       effects
+src/catalog-skills.js        skill badges
+src/catalog-lines.js         line stickers for the README builder
+src/catalog-person.js        character API (SHAPES + personArt)
+src/catalog-person-face.js   expressions, accessories, sizes
+src/person-minimi.js         minimi renderer (hair × outfit × pose on shared anchors)
+src/room.js                  room renderer (isometric placement + z-sorting)
+src/room-*.js                room pieces (styles, geometry, text, weather)
+src/pixel.js                 dot grid → run merging → one path per colour
+src/dotfont.js               glyph bitmaps → dot paths (text in the pixel theme)
+src/iso.js                   isometric tile constants, shading
+src/svg.js                   XML escaping, width measurement, wrapping, output scale
+src/links.js                 link badge renderer + 3x5 dot font, README snippet
+src/repocard.js              repository card renderer + language colours
+src/repocard-themes.js       repo card theme table + pattern shapes
+src/suika.js                 suika contributors (size ladder + stacking physics + card)
+src/github.js                repo, contributor and avatar lookups
+src/png.js                   PNG decoder (node:zlib only)
+src/ascii.js                 pixel grid ↔ dot strings
+src/zip.js                   zip writer for the builder download
+index.html                   README builder page (entry: readme/readme.js)
+readme/                      README builder (blocks, board, preview, markdown export)
+editor/                      room editor mounted inside the builder (pure logic in editor-core.js)
+scripts/                     CLI entry points
+templates/                   Actions workflow templates
 ```

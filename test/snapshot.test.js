@@ -33,7 +33,7 @@ const DOTS = readDotFont(readFileSync(new URL('../assets/galmuri11.dot', import.
 
 const REPO = {
   owner: 'kimjungminn24',
-  name: 'git-room',
+  name: 'cute-readme',
   description: 'GitHub 프로필 README에 붙이는 픽셀 아이소메트릭 미니룸 SVG 생성기',
   language: 'JavaScript',
   stars: 1234,

@@ -15,11 +15,6 @@
     "render:cards": "node scripts/render-cards.js",
     "render:suika": "node scripts/render-suika.js",
     "import": "node scripts/import-png.js",
-    "gen:pixellab": "node scripts/gen-pixellab.js",
-    "import:pixellab": "node scripts/import-pixellab.js",
-    "gen:character": "node scripts/gen-character.js",
-    "import:character": "node scripts/import-character.js",
-    "edit:character": "node scripts/edit-character.js",
     "editor": "node scripts/serve.js"
   }
 }
