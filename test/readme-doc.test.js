@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { app, migrate } from '../readme/readme-shared.js';
+import { app, migrate, load, SAVE_KEY, BACKUP_KEY } from '../readme/readme-shared.js';
 import { row, findBlock, detach, dropOnGap, dropOnBlock, allBlocks, imageName, ordinal } from '../readme/readme-doc.js';
 
 const block = (id, type = 'text') => ({ id, type, text: id });
@@ -108,4 +108,36 @@ test('migrate lifts old saves: flat lists, dead badges, sticker boards', () => {
   assert.equal(run[0].cells[0][0].type, 'line');
 
   assert.equal(migrate([{ id: 'r', cells: [[{ id: 'y', type: 'badges' }]] }]), null, 'nothing left is nothing');
+});
+
+test('migrate drops broken rows, cells and blocks but keeps the rest of the save', () => {
+  const good = { id: 'g', type: 'text', text: 'keep me' };
+  const doc = migrate([
+    { id: 'r1', cells: null },
+    null,
+    { id: 'r2', cells: [null, [null, 'x', { id: 'n' }, good], 'nope'] },
+    { cells: [[{ id: 's', type: 'stickers', items: [null, { art: 'items:cat' }] }]] },
+    { id: 'r4', cells: [[{ id: 'b', type: 'stickers', items: 'oops' }]] },
+  ]);
+  assert.deepEqual(doc.map((r) => r.cells.map((c) => c.map((b) => b.type))), [[['text']], [['sticker']]]);
+  assert.equal(doc[0].cells[0][0].text, 'keep me');
+  assert.ok(doc[1].id, 'a row without an id gets one');
+});
+
+test('a save that cannot be read is copied aside before the starter document replaces it', () => {
+  const store = new Map();
+  const had = globalThis.localStorage;
+  globalThis.localStorage = { getItem: (k) => store.get(k) ?? null, setItem: (k, v) => store.set(k, String(v)) };
+  try {
+    store.set(SAVE_KEY, '{not json');
+    assert.equal(load(), null);
+    assert.equal(store.get(BACKUP_KEY), '{not json');
+
+    store.clear();
+    store.set(SAVE_KEY, JSON.stringify([{ id: 'r', cells: [[{ id: 'a', type: 'text', text: 'ok' }]] }]));
+    assert.equal(load()[0].cells[0][0].text, 'ok');
+    assert.equal(store.has(BACKUP_KEY), false, 'a good save is not copied');
+  } finally {
+    globalThis.localStorage = had;
+  }
 });

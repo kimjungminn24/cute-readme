@@ -13,22 +13,39 @@ export const ui = {};
 // Release listeners and animation frames when block cards are rebuilt.
 export const cleanups = new Set();
 
+export const BACKUP_KEY = SAVE_KEY + ":unreadable";
+
+// Keep a save we could not read, because the starter document is about to be written over it.
+function keepUnreadable(raw) {
+  try { localStorage.setItem(BACKUP_KEY, raw); } catch {}
+}
+
 export function load() {
+  let raw = null;
   try {
-    const raw = localStorage.getItem(SAVE_KEY) ?? localStorage.getItem(OLD_SAVE_KEY);
-    return migrate(JSON.parse(raw));
+    raw = localStorage.getItem(SAVE_KEY) ?? localStorage.getItem(OLD_SAVE_KEY);
+    const doc = migrate(JSON.parse(raw));
+    if (!doc && raw && raw !== "[]") keepUnreadable(raw);
+    return doc;
   } catch {
+    if (raw) keepUnreadable(raw);
     return null;
   }
 }
 
-// Migrate saved documents to the current block schema.
+const isBlock = (b) => b !== null && typeof b === "object" && typeof b.type === "string";
+
+// Migrate saved documents to the current block schema, dropping only the pieces that are broken.
 export function migrate(v) {
   if (!Array.isArray(v) || !v.length) return null;
-  const rows = v[0].cells ? v : v.map((b) => ({ id: uid(), cells: [[b]] }));
+  const rows = v.some((r) => Array.isArray(r?.cells))
+    ? v.filter((r) => Array.isArray(r?.cells))
+    : v.filter(isBlock).map((b) => ({ id: uid(), cells: [[b]] }));
   for (const r of rows) {
+    r.id ??= uid();
     r.cells = r.cells
-      .map((c) => c.filter((b) => b.type !== "badges").flatMap(splitStickers).map(asLine))
+      .filter(Array.isArray)
+      .map((c) => c.filter((b) => isBlock(b) && b.type !== "badges").flatMap(splitStickers).map(asLine))
       .filter((c) => c.length);
   }
   const kept = rows.filter((r) => r.cells.length);
@@ -43,8 +60,8 @@ function asLine(b) {
 
 function splitStickers(b) {
   if (b.type !== "stickers") return [b];
-  const art = (b.items ?? [])
-    .map((it) => (it.kind ? (it.kind === "art" ? it.value : null) : it.art))
+  const art = (Array.isArray(b.items) ? b.items : [])
+    .map((it) => (!it ? null : it.kind ? (it.kind === "art" ? it.value : null) : it.art))
     .filter(Boolean);
   return art.map((key) => ({ id: uid(), type: "sticker", align: b.align ?? "center", size: 64, art: key }));
 }
