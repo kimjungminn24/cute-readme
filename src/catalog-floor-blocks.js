@@ -101,30 +101,45 @@ const ACTIVITY = [
   '102134 ',
   '021221 ',
 ];
-const GRASS_FC = 3;
-const GRASS_FR = 3;
-const GRASS_LEVELS = ['#e3e6da', '#c3e3b1', '#98cf86', '#6fb167', '#4d8f52'];
+const GRASS_SIZE = 3.5;
+const GRASS_LEVELS = ['#ddd6c6', '#c3e3b1', '#98cf86', '#6fb167', '#4d8f52'];
+const TILE_W = 8;
+
+// A whole-dot iso tile, TILE_W wide and raised h dots: T top, L left side, R right side.
+function grassTile(h) {
+  const half = TILE_W / 2;
+  const tall = TILE_W / 4;
+  const inside = (px, py, cy) => Math.abs(px - half) / half + Math.abs(py - cy) / tall <= 1;
+  const rows = [];
+  for (let y = 0; y < half + h; y++) {
+    let row = '';
+    for (let x = 0; x < TILE_W; x++) {
+      const px = x + 0.5;
+      const py = y + 0.5;
+      if (inside(px, py, tall)) row += 'T';
+      else if (Array.from({ length: h * 4 + 1 }, (_, k) => tall + k / 4).some((cy) => inside(px, py, cy))) row += px < half ? 'L' : 'R';
+      else row += '.';
+    }
+    rows.push(row);
+  }
+  return rows;
+}
+const FLAT_TILE = grassTile(0);
+const RAISED_TILE = grassTile(1);
 
 export const grassgraph = sprite((dots) => {
-  const at = P(GRASS_FC, GRASS_FR);
-  pxBox(dots, GRASS_FC, GRASS_FR, 1, '#efe6d4');
-
-  const weeks = ACTIVITY[0].length;
-  const days = ACTIVITY.length;
-  const pc = (GRASS_FC - 0.2) / weeks;
-  const pr = (GRASS_FR - 0.2) / days;
-  const s = Math.min(pc, pr) * 0.78;
+  const at = P(GRASS_SIZE, GRASS_SIZE);
   const cells = [];
-  for (let d = 0; d < days; d++) {
-    for (let w = 0; w < weeks; w++) {
-      const level = '01234'.indexOf(ACTIVITY[d][w]);
-      if (level >= 0) cells.push({ c: 0.1 + w * pc + (pc + s) / 2, r: 0.1 + d * pr + (pr + s) / 2, level });
-    }
-  }
+  ACTIVITY.forEach((days, d) => [...days].forEach((ch, w) => {
+    const level = '01234'.indexOf(ch);
+    if (level >= 0) cells.push({ w, d, level });
+  }));
   // Back to front, so nearer tiles cover the ones behind.
-  cells.sort((a, b) => a.c + a.r - (b.c + b.r));
-  for (const { c, r, level } of cells) {
-    const [dx, dy] = at(c, r);
-    pxBox(dots, s, s, level ? 2 : 1, GRASS_LEVELS[level], { dx, dy, lift: 1 });
+  cells.sort((a, b) => a.w + a.d - (b.w + b.d));
+  for (const { w, d, level } of cells) {
+    // Half-tile steps from a quarter-tile edge keep every tile on whole dots.
+    const [x, y] = at(0.25 + w * 0.5, 0.25 + d * 0.5);
+    const c = GRASS_LEVELS[level];
+    drawAscii(dots, level ? RAISED_TILE : FLAT_TILE, { T: c, L: shade(c, 0.86), R: shade(c, 0.72) }, { dx: x, dy: y + TILE_W / 4 });
   }
 });
