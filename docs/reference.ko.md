@@ -289,10 +289,10 @@ renderLinkBadge({ label: 'Blog' }, { scale: 2 });
 src/catalog.js               카탈로그 배럴 (아래 구역 파일을 다시 내보냄)
 src/catalog-base.js          아이소메트릭 좌표 헬퍼 + 돌 색
 src/catalog-floor.js         바닥 아이템 목록 (FLOOR_ITEMS)
-src/catalog-floor-ai.js      PixelLab로 만든 바닥 아이템 그림 (floor-ai/에 하나씩)
+src/catalog-floor-ai.js      바닥 아이템 그림 (floor-ai/에 하나씩)
 src/catalog-floor-blocks.js  손으로 그린 블록 아이템 (광석, 크리퍼, 흙, 잔디 블록)
 src/catalog-wall.js          벽 장식
-src/catalog-wall-ai.js       PixelLab로 만든 벽 장식 그림 (wall-ai/)
+src/catalog-wall-ai.js       벽 장식 그림 (wall-ai/)
 src/catalog-effects.js       이펙트
 src/catalog-skills.js        스킬 뱃지
 src/catalog-lines.js         리드미 빌더의 줄 스티커

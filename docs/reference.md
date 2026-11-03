@@ -289,10 +289,10 @@ Only `width`/`height` on the `<svg>` are multiplied; `viewBox` stays as it is. N
 src/catalog.js               catalog barrel (re-exports the files below)
 src/catalog-base.js          isometric coordinate helper + stone colour
 src/catalog-floor.js         floor item list (FLOOR_ITEMS)
-src/catalog-floor-ai.js      floor item art made with PixelLab (one file each in floor-ai/)
+src/catalog-floor-ai.js      floor item art (one file each in floor-ai/)
 src/catalog-floor-blocks.js  hand-drawn block items (ore, creeper, dirt, grass block)
 src/catalog-wall.js          wall pieces
-src/catalog-wall-ai.js       wall art made with PixelLab (wall-ai/)
+src/catalog-wall-ai.js       wall art (wall-ai/)
 src/catalog-effects.js       effects
 src/catalog-skills.js        skill badges
 src/catalog-lines.js         line stickers for the README builder

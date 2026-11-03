@@ -17,9 +17,7 @@ Old `round`, `square`, `stick` and `chibi` shape IDs now render the new minimi.
 Unknown hairstyles, outfits and poses resolve to bob, T-shirt and standing.
 User-selected skin, hair, top and bottom colors continue to work.
 
-The former generated whole-character sprite files are removed. The standalone
-PixelLab generation/import scripts are retained as optional asset utilities;
-their output is no longer loaded by the person renderer.
+The former generated whole-character sprite files are removed.
 
 Validation includes all 840 hair/outfit/pose combinations, floor and bubble
 anchors, independent recoloring, face preservation while changing clothes,

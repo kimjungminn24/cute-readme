@@ -289,10 +289,10 @@ renderLinkBadge({ label: 'Blog' }, { scale: 2 });
 src/catalog.js               素材总出口（重新导出下面的分区文件）
 src/catalog-base.js          等距坐标辅助 + 石头颜色
 src/catalog-floor.js         地板物品清单（FLOOR_ITEMS）
-src/catalog-floor-ai.js      用 PixelLab 制作的地板物品图形（floor-ai/ 下每件一个文件）
+src/catalog-floor-ai.js      地板物品图形（floor-ai/ 下每件一个文件）
 src/catalog-floor-blocks.js  手绘方块物品（矿石、苦力怕、泥土、草方块）
 src/catalog-wall.js          墙饰
-src/catalog-wall-ai.js       用 PixelLab 制作的墙饰图形（wall-ai/）
+src/catalog-wall-ai.js       墙饰图形（wall-ai/）
 src/catalog-effects.js       特效
 src/catalog-skills.js        技能徽章
 src/catalog-lines.js         README 生成器的线条贴纸
