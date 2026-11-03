@@ -1,4 +1,4 @@
-import { ore, creeper, dirt, grassblock, grassgraph } from './catalog-floor-blocks.js';
+import { ore, creeper, dirt, grassblock, grassgraph, grasslong, GRASS_SQUARE, GRASS_LONG } from './catalog-floor-blocks.js';
 import * as AI from './catalog-floor-ai.js';
 
 export const FLOOR_ITEMS = {
@@ -10,7 +10,8 @@ export const FLOOR_ITEMS = {
   creeper: { name: 'Creeper', fc: 1, fr: 1, layer: 1, art: creeper },
   dirt: { name: 'Dirt', fc: 1, fr: 1, layer: 1, top: 12, art: dirt },
   grassblock: { name: 'Grass Block', fc: 1, fr: 1, layer: 1, top: 12, art: grassblock },
-  grassgraph: { name: 'Contribution Grass', fc: 3.5, fr: 3.5, layer: 0, art: grassgraph },
+  grassgraph: { name: 'Contribution Grass', ...GRASS_SQUARE, layer: 0, art: grassgraph },
+  grasslong: { name: 'Contribution Grass (Long)', ...GRASS_LONG, layer: 0, art: grasslong },
   table: { name: 'Table', fc: 1, fr: 1, layer: 1, top: 9.6, art: AI.table },
   desk: { name: 'Desk', fc: 1.5, fr: 0.8, layer: 1, top: 8.6, art: AI.desk },
   tv: { name: 'TV', fc: 1, fr: 0.6, layer: 1, art: AI.tv },

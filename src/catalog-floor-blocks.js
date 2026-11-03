@@ -90,9 +90,9 @@ export const grassblock = sprite((dots) => {
   for (const r of [0.2, 0.52, 0.82]) rightFace(dots, r, 8.5, r + 0.16, 10.5, shade(GRASS_TOP, 0.7));
 });
 
-// A contribution graph laid on the floor: 7 weeks by 7 days of grass tiles; days with commits stand a dot taller.
+// Contribution graphs laid on the floor: grass tiles, one per day, and days with commits stand a dot taller.
 // One row per day, one digit per week (0 empty .. 4 busiest); a space is a day still to come.
-const ACTIVITY = [
+const SQUARE_WEEKS = [
   '2103212',
   '3012431',
   '0231342',
@@ -101,9 +101,19 @@ const ACTIVITY = [
   '102134 ',
   '021221 ',
 ];
-const GRASS_SIZE = 3.5;
-const GRASS_LEVELS = ['#ddd6c6', '#c3e3b1', '#98cf86', '#6fb167', '#4d8f52'];
+const LONG_WEEKS = [
+  '01001030130334',
+  '20200311011012',
+  '01103201212221',
+  '01001123302432',
+  '20202200220043',
+  '0011122234210 ',
+  '3002022010013 ',
+];
+const GRASS_LEVELS = ['#d4d4c4', '#c3e3b1', '#98cf86', '#6fb167', '#4d8f52'];
 const TILE_W = 8;
+// Each day takes half a floor tile, so a graph covers weeks / 2 by days / 2 tiles.
+const DAY = 0.5;
 
 // A whole-dot iso tile, TILE_W wide and raised h dots: T top, L left side, R right side.
 function grassTile(h) {
@@ -127,19 +137,29 @@ function grassTile(h) {
 const FLAT_TILE = grassTile(0);
 const RAISED_TILE = grassTile(1);
 
-export const grassgraph = sprite((dots) => {
-  const at = P(GRASS_SIZE, GRASS_SIZE);
-  const cells = [];
-  ACTIVITY.forEach((days, d) => [...days].forEach((ch, w) => {
-    const level = '01234'.indexOf(ch);
-    if (level >= 0) cells.push({ w, d, level });
-  }));
-  // Back to front, so nearer tiles cover the ones behind.
-  cells.sort((a, b) => a.w + a.d - (b.w + b.d));
-  for (const { w, d, level } of cells) {
-    // Half-tile steps from a quarter-tile edge keep every tile on whole dots.
-    const [x, y] = at(0.25 + w * 0.5, 0.25 + d * 0.5);
-    const c = GRASS_LEVELS[level];
-    drawAscii(dots, level ? RAISED_TILE : FLAT_TILE, { T: c, L: shade(c, 0.86), R: shade(c, 0.72) }, { dx: x, dy: y + TILE_W / 4 });
-  }
-});
+const grassSize = (activity) => ({ fc: activity[0].length * DAY, fr: activity.length * DAY });
+
+function grassField(activity) {
+  const { fc, fr } = grassSize(activity);
+  return sprite((dots) => {
+    const at = P(fc, fr);
+    const cells = [];
+    activity.forEach((days, d) => [...days].forEach((ch, w) => {
+      const level = '01234'.indexOf(ch);
+      if (level >= 0) cells.push({ w, d, level });
+    }));
+    // Back to front, so nearer tiles cover the ones behind.
+    cells.sort((a, b) => a.w + a.d - (b.w + b.d));
+    for (const { w, d, level } of cells) {
+      // Half-tile steps from a quarter-tile edge keep every tile on whole dots.
+      const [x, y] = at(DAY / 2 + w * DAY, DAY / 2 + d * DAY);
+      const c = GRASS_LEVELS[level];
+      drawAscii(dots, level ? RAISED_TILE : FLAT_TILE, { T: c, L: shade(c, 0.86), R: shade(c, 0.72) }, { dx: x, dy: y + TILE_W / 4 });
+    }
+  });
+}
+
+export const GRASS_SQUARE = grassSize(SQUARE_WEEKS);
+export const GRASS_LONG = grassSize(LONG_WEEKS);
+export const grassgraph = grassField(SQUARE_WEEKS);
+export const grasslong = grassField(LONG_WEEKS);
