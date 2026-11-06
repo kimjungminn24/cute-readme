@@ -37,7 +37,7 @@ export const STYLE = `
   .tail { transform-box: fill-box; transform-origin: 20% 90%; animation: wag 2s steps(2) infinite; }
   .fx-beat { transform-box: fill-box; transform-origin: center; animation: beat 1.3s steps(2) infinite; }
   .fx-twinkle { animation: glowk 1.6s steps(2) infinite; }
-  .fx-bob { animation: bob 2.4s steps(3) infinite; }
+  .fx-bob { animation: bob 2.4s steps(3) infinite; animation-delay: var(--bob-delay, 0s); }
   @keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.25); } }
   @keyframes glowk { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
   @keyframes wag { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(16deg); } }
@@ -200,7 +200,9 @@ export function renderRoom(data = {}, options = {}) {
       drawables.push({
         layer: 2,
         depth: (fx.col ?? 0) + (fx.row ?? 0) + 1,
-        markup: `<g${editable ? ` data-kind="${kind}" data-idx="${idx}"` : ''} transform="translate(${c.x} ${c.y + 6})">${def.art}</g>`,
+        // Skill badges bob out of step with each other so a row of them does not move as one block.
+        markup: `<g${editable ? ` data-kind="${kind}" data-idx="${idx}"` : ''} transform="translate(${c.x} ${c.y + 6})"`
+          + `${kind === 'skill' && idx ? ` style="--bob-delay:${-(idx * 0.8) % 2.4}s"` : ''}>${def.art}</g>`,
       });
     });
   }

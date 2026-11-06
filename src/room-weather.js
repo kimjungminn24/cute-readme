@@ -18,9 +18,10 @@ const WEATHERS = {
     fall: [9, 16],
     sway: [3.4, 5.2],
     drift: 8,
+    // A pale blue rim keeps the flakes visible on white walls and light-mode READMEs.
     art: (i) => (i % 4 === 0
-      ? `<path fill="#ffffff" d="M0 0h4v4h-4z"/>`
-      : `<path fill="#f2f7ff" d="M0 0h2v2h-2z"/>`),
+      ? `<path fill="#b9cbe6" d="M0 -1h4v6h-4zM-1 0h6v4h-6z"/><path fill="#ffffff" d="M0 0h4v4h-4z"/>`
+      : `<path fill="#b9cbe6" d="M-1 -1h4v4h-4z"/><path fill="#ffffff" d="M0 0h2v2h-2z"/>`),
   },
   rain: {
     name: 'Rain',
