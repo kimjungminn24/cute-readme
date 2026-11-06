@@ -21,13 +21,13 @@ const MAX_ROWS = 8;
 
 const cardOpts = (b) => {
   wantDotFont();
-  return { theme: b.theme, title: b.title, width: b.width, frame: b.frame !== "none", dots: dotFont };
+  return { theme: b.theme, title: b.title, width: b.width, frame: b.frame !== "none", typing: b.typing === "on", dots: dotFont };
 };
 
 BLOCKS.about = {
   label: "about me",
   fresh: () => ({
-    title: "about me", theme: DEFAULT_ABOUT_THEME, frame: "window", width: 460, align: "center",
+    title: "about me", theme: DEFAULT_ABOUT_THEME, frame: "window", typing: "off", width: 460, align: "center",
     rows: DEFAULT_ABOUT_ROWS.map((r) => ({ ...r })),
   }),
 
@@ -37,6 +37,7 @@ BLOCKS.about = {
     ui.input(b, "title", "title");
     ui.select(b, "theme", Object.entries(ABOUT_THEMES).map(([id, t]) => [id, t.label]));
     ui.select(b, "frame", [["window", "window"], ["none", "text only"]]);
+    ui.select(b, "typing", [["off", "still text"], ["on", "typing"]]);
     ui.number(b, "width");
     ui.rowEnd();
 

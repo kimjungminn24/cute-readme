@@ -38,7 +38,7 @@ make your GitHub profile a tiny pixel home
 
 <img src="./docs/sample-about.svg" alt="about me">
 
-放一个 `+ about me` 块，填几行：working on、learning、interested in，或者别的。每行都有一个像素图标。主题有 `pixel`、`candy`、`soda`、`matcha`、`night`，以及非像素的 `light`、`dark`。把边框设为 `text only`，就只留下图标和文字。
+放一个 `+ about me` 块，填几行：working on、learning、interested in，或者别的。每行都有一个像素图标。主题有 `pixel`、`candy`、`soda`、`matcha`、`night`，以及非像素的 `light`、`dark`。把边框设为 `text only`，就只留下图标和文字。打开 `typing`，每行会一个字一个字地打出来。
 
 ## Add a music card
 

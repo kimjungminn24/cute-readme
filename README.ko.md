@@ -38,7 +38,7 @@ make your GitHub profile a tiny pixel home
 
 <img src="./docs/sample-about.svg" alt="about me">
 
-`+ about me` 블록을 넣고 working on, learning, interested in 같은 줄을 채우세요. 줄마다 픽셀 아이콘이 붙습니다. 테마는 `pixel`, `candy`, `soda`, `matcha`, `night`, 그리고 픽셀이 아닌 `light`, `dark`가 있습니다. 틀을 `text only`로 바꾸면 창 없이 아이콘과 글씨만 남습니다.
+`+ about me` 블록을 넣고 working on, learning, interested in 같은 줄을 채우세요. 줄마다 픽셀 아이콘이 붙습니다. 테마는 `pixel`, `candy`, `soda`, `matcha`, `night`, 그리고 픽셀이 아닌 `light`, `dark`가 있습니다. 틀을 `text only`로 바꾸면 창 없이 아이콘과 글씨만 남습니다. `typing`을 켜면 글자가 한 글자씩 타이핑되듯 나타납니다.
 
 ## Add a music card
 
