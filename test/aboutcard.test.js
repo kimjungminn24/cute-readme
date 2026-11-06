@@ -56,3 +56,13 @@ test('text is escaped', () => {
   assert.ok(!svg.includes('<b>'));
   assert.ok(svg.includes('&amp; co'));
 });
+
+test('frame: false leaves only the icons and words', () => {
+  const svg = renderAboutCard(DEFAULT_ABOUT_ROWS, { frame: false, dots });
+  assert.ok(!svg.includes('M4 0H'), 'frame drawn');
+  assert.ok(!svg.includes('tw'), 'twinkles drawn');
+  const [, h] = size(svg);
+  assert.equal(h, 30 + DEFAULT_ABOUT_ROWS.length * 30);
+  const [, noTitle] = size(renderAboutCard(DEFAULT_ABOUT_ROWS, { frame: false, title: '' }));
+  assert.ok(noTitle < h);
+});

@@ -88,12 +88,12 @@ export const ABOUT_ICONS = {
   ],
   mail: [
     '........',
-    '#######.',
-    '#+###+#.',
-    '##+#+##.',
-    '###+###.',
-    '#######.',
-    '#######.',
+    'ooooooo.',
+    'o#+++#o.',
+    'o+#+#+o.',
+    'o++#++o.',
+    'o+++++o.',
+    'ooooooo.',
     '........',
   ],
   star: [
@@ -237,12 +237,20 @@ export function renderAboutCard(rows = DEFAULT_ABOUT_ROWS, options = {}) {
   const title = String(options.title ?? 'about me');
   const list = (Array.isArray(rows) ? rows : []).filter((r) => r && (r.label || r.text)).slice(0, 8);
 
-  const natural = BAR + 18 + list.length * ROW + 8;
-  const H = Math.max(natural, Math.round(Number(options.height) || 0), BAR + 60);
-  const id = `ab${hash(`${themeId}|${W}|${H}|${title}|${JSON.stringify(list)}`).toString(36)}`;
+  // frame: false draws only the icons and words on a transparent background.
+  const bare = options.frame === false;
+  const head = bare ? (title ? 30 : 4) : BAR + 18;
+  const natural = head + list.length * ROW + (bare ? 0 : 8);
+  const H = Math.max(natural, Math.round(Number(options.height) || 0), bare ? 0 : BAR + 60);
+  const id = `ab${hash(`${themeId}|${bare}|${W}|${H}|${title}|${JSON.stringify(list)}`).toString(36)}`;
 
   const parts = [];
-  if (t.plain) {
+  if (bare) {
+    if (title) {
+      parts.push(iconArt('heart', 4, 4, t));
+      parts.push(text.write(title, 24, 17, t.ink, 13, { bold: true }));
+    }
+  } else if (t.plain) {
     const clip = `${id}c`;
     parts.push(
       `<defs><clipPath id="${clip}"><rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="10"/></clipPath></defs>`,
@@ -281,25 +289,28 @@ export function renderAboutCard(rows = DEFAULT_ABOUT_ROWS, options = {}) {
   // rows, spread over the card when it is taller than it needs to be
   const labels = list.map((r) => String(r.label ?? ''));
   const labelW = Math.max(0, ...labels.map((l) => text.width(l, 12, true)));
-  const valueX = PAD + 26 + labelW + 12;
-  const top = BAR + 18;
-  const step = list.length ? Math.max(ROW, Math.floor((H - top - 12) / list.length)) : ROW;
+  const left = bare ? 4 : PAD;
+  const valueX = left + 26 + labelW + 12;
+  const top = head;
+  const step = list.length ? Math.max(ROW, Math.floor((H - top - (bare ? 0 : 12)) / list.length)) : ROW;
 
   list.forEach((r, i) => {
     const y = top + i * step + Math.floor((step - ROW) / 2);
-    parts.push(iconArt(r.icon, PAD, y, t));
-    parts.push(text.write(String(r.label ?? ''), PAD + 26, y + 12, t.accent, 12, { bold: true }));
-    const value = text.fit(String(r.text ?? ''), W - valueX - PAD, 12);
+    parts.push(iconArt(r.icon, left, y, t));
+    parts.push(text.write(String(r.label ?? ''), left + 26, y + 12, t.accent, 12, { bold: true }));
+    const value = text.fit(String(r.text ?? ''), W - valueX - (bare ? 4 : PAD), 12);
     parts.push(text.write(value, valueX, y + 12, t.ink, 12));
   });
 
-  // corner twinkles
-  parts.push(
-    `<g class="${id}tw">${twinkle(W - PAD - 6, BAR + 20, t.accent)}</g>`,
-    `<g class="${id}tw ${id}tw2">${twinkle(W - PAD - 20, H - 18, t.sub)}</g>`,
-  );
+  if (!bare) {
+    // corner twinkles
+    parts.push(
+      `<g class="${id}tw">${twinkle(W - PAD - 6, BAR + 20, t.accent)}</g>`,
+      `<g class="${id}tw ${id}tw2">${twinkle(W - PAD - 20, H - 18, t.sub)}</g>`,
+    );
+  }
 
-  const css = `@keyframes ${id}k{0%,100%{opacity:1}50%{opacity:.25}}`
+  const css = bare ? '' : `@keyframes ${id}k{0%,100%{opacity:1}50%{opacity:.25}}`
     + `#${id} .${id}tw{animation:${id}k 2.4s steps(2) infinite}`
     + `#${id} .${id}tw2{animation-delay:-1.2s}`
     + `@media(prefers-reduced-motion:reduce){#${id} .${id}tw{animation:none}}`;
@@ -308,5 +319,5 @@ export function renderAboutCard(rows = DEFAULT_ABOUT_ROWS, options = {}) {
   const size = scale === 1 ? `width="${W}" height="${H}"` : `width="${Math.round(W * scale)}" height="${Math.round(H * scale)}"`;
   return `<svg xmlns="http://www.w3.org/2000/svg" ${size} viewBox="0 0 ${W} ${H}" id="${id}"`
     + `${t.plain ? '' : ' shape-rendering="crispEdges"'} role="img" aria-label="${escapeXml(title)}">`
-    + `<title>${escapeXml(title)}</title><style>${css}</style>${parts.join('')}</svg>`;
+    + `<title>${escapeXml(title)}</title>${css ? `<style>${css}</style>` : ''}${parts.join('')}</svg>`;
 }

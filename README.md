@@ -38,7 +38,7 @@ Drop a `+ repo cards` block and enter `owner/repo`. The card above is the `pixel
 
 <img src="./docs/sample-about.svg" alt="about me">
 
-Drop a `+ about me` block and fill in a few lines: working on, learning, interested in, or anything else. Each line gets a pixel icon. Themes: `pixel`, `candy`, `soda`, `matcha`, `night`, plus plain `light` and `dark`.
+Drop a `+ about me` block and fill in a few lines: working on, learning, interested in, or anything else. Each line gets a pixel icon. Themes: `pixel`, `candy`, `soda`, `matcha`, `night`, plus plain `light` and `dark`. Set the frame to `text only` to drop the window and keep just the icons and words.
 
 ## Add a music card
 
