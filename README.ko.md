@@ -34,6 +34,12 @@ make your GitHub profile a tiny pixel home
 
 `+ repo cards` 블록을 놓고 `owner/repo` 를 적습니다. 위 카드는 `pixel` 테마입니다.
 
+## Add an about me card
+
+<img src="./docs/sample-about.svg" alt="about me">
+
+`+ about me` 블록을 넣고 working on, learning, interested in 같은 줄을 채우세요. 줄마다 픽셀 아이콘이 붙습니다. 테마는 `pixel`, `candy`, `soda`, `matcha`, `night`, 그리고 픽셀이 아닌 `light`, `dark`가 있습니다. 틀을 `text only`로 바꾸면 창 없이 아이콘과 글씨만 남습니다.
+
 ## Add a music card
 
 <img src="./docs/sample-music.svg" alt="Now playing"> <img src="./docs/sample-music-square.svg" alt="Now playing, square">

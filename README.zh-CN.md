@@ -34,6 +34,12 @@ make your GitHub profile a tiny pixel home
 
 放一个 `+ repo cards` 块，填 `owner/repo`。上面这张是 `pixel` 主题。
 
+## Add an about me card
+
+<img src="./docs/sample-about.svg" alt="about me">
+
+放一个 `+ about me` 块，填几行：working on、learning、interested in，或者别的。每行都有一个像素图标。主题有 `pixel`、`candy`、`soda`、`matcha`、`night`，以及非像素的 `light`、`dark`。把边框设为 `text only`，就只留下图标和文字。
+
 ## Add a music card
 
 <img src="./docs/sample-music.svg" alt="Now playing"> <img src="./docs/sample-music-square.svg" alt="Now playing, square">
