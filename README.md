@@ -44,6 +44,8 @@ Drop a `+ repo cards` block and enter `owner/repo`. The card above is the `pixel
 
 Visitors sign by commenting on a GitHub Discussion, and their notes show up in your README with their avatar and name.
 
+> **Turn on Discussions first.** They are off by default, and the workflow cannot find the guestbook without them.
+
 1. Turn on Discussions in Settings > General > Features.
 2. Start a discussion with `Guestbook` in its title. The Announcements category works well: only you can start posts there, and anyone can comment.
 3. Copy [templates/guestbook.yml](templates/guestbook.yml) to `.github/workflows/guestbook.yml`. It redraws `guestbook.svg` whenever someone comments.
@@ -55,6 +57,12 @@ Link the image to the discussion so visitors know where to write:
 ```
 
 To take a note down, hide the comment in the discussion. Hidden comments drop out on the next run.
+
+GitHub subscribes everyone who comments to the thread, so earlier visitors get a notification for each new note. Nobody else can turn that off for them, so it helps to say how in the discussion itself:
+
+```md
+Commenting subscribes you to this thread. Click **Unsubscribe** on the right to stop notifications.
+```
 
 ## When something does not work
 

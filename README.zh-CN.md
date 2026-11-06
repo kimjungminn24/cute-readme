@@ -44,6 +44,8 @@ make your GitHub profile a tiny pixel home
 
 访客在 GitHub Discussion 里留言，留言会连同头像和名字一起出现在你的 README 留言簿里。
 
+> **请先打开 Discussions。** 它默认是关闭的，关闭时工作流找不到留言簿。
+
 1. 在 Settings > General > Features 里打开 Discussions。
 2. 新建一个标题里带 `Guestbook` 的讨论。推荐用 Announcements 分类：只有你能发帖，所有人都能评论。
 3. 把 [templates/guestbook.yml](templates/guestbook.yml) 复制到 `.github/workflows/guestbook.yml`。每次有人留言，它都会重画 `guestbook.svg`。
@@ -55,6 +57,12 @@ make your GitHub profile a tiny pixel home
 ```
 
 想撤下某条留言，在讨论里隐藏该评论即可，下次运行时它就会消失。
+
+GitHub 会让每个留言的人自动订阅这个讨论，所以之前的访客每来一条新留言都会收到通知。别人无法替他们关闭，所以最好在讨论正文里写上关闭方法：
+
+```md
+留言后你会订阅这个讨论。不想收到通知的话，点右侧的 **Unsubscribe**。
+```
 
 ## When something does not work
 

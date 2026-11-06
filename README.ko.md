@@ -44,6 +44,8 @@ make your GitHub profile a tiny pixel home
 
 방문자가 GitHub Discussion에 댓글을 달면, 프로필 사진과 이름이 함께 README 방명록에 올라갑니다.
 
+> **Discussions를 먼저 켜야 합니다.** 기본으로 꺼져 있고, 꺼져 있으면 워크플로가 방명록 글을 찾지 못합니다.
+
 1. Settings > General > Features에서 Discussions를 켭니다.
 2. 제목에 `Guestbook`이 들어간 글을 하나 만듭니다. Announcements 카테고리를 추천합니다. 새 글은 나만 쓸 수 있고 댓글은 누구나 달 수 있습니다.
 3. [templates/guestbook.yml](templates/guestbook.yml)을 `.github/workflows/guestbook.yml`로 복사합니다. 댓글이 달릴 때마다 `guestbook.svg`를 다시 그립니다.
@@ -55,6 +57,12 @@ make your GitHub profile a tiny pixel home
 ```
 
 방명록에서 내리고 싶은 글은 Discussion에서 댓글을 숨기면 됩니다. 다음 실행 때 빠집니다.
+
+GitHub은 댓글을 단 사람을 그 글에 자동으로 구독시킵니다. 그래서 먼저 쓴 방문자는 새 글이 올라올 때마다 알림을 받습니다. 다른 사람의 알림은 대신 꺼 줄 수 없으니, 방명록 글 본문에 끄는 방법을 적어 두면 좋습니다.
+
+```md
+댓글을 남기면 이 글의 알림이 켜져요. 알림이 싫으면 오른쪽 **Unsubscribe**를 눌러 주세요.
+```
 
 ## When something does not work
 
