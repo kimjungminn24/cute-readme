@@ -9,3 +9,6 @@ node_modules/
 
 # 로컬 작업 파일
 .claude/
+/guestbook.svg
+/guestbook.preview*.svg
+/guestbook.preview*.png
