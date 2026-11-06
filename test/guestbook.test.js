@@ -97,3 +97,12 @@ test('snippet links to the discussion', () => {
     '<a href="https://github.com/o/r/discussions/1"><img src="./guestbook.svg" width="100%" alt="Guestbook"></a>',
   );
 });
+
+test('undefined options keep their defaults', () => {
+  const long = 'word '.repeat(200);
+  const entries = toEntries([comment('a', long, '2026-01-01')]);
+  const plain = renderGuestbook(entries, { theme: 'light' });
+  const unset = renderGuestbook(entries, { theme: 'light', hint: undefined, lines: undefined, title: undefined });
+  assert.equal(unset, plain);
+  assert.ok(unset.includes('leave a note'));
+});
