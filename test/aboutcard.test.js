@@ -62,7 +62,7 @@ test('frame: false leaves only the icons and words', () => {
   assert.ok(!svg.includes('M4 0H'), 'frame drawn');
   assert.ok(!svg.includes('tw'), 'twinkles drawn');
   const [, h] = size(svg);
-  assert.equal(h, 30 + DEFAULT_ABOUT_ROWS.length * 30);
+  assert.equal(h, 30 + DEFAULT_ABOUT_ROWS.length * 24);
   const [, noTitle] = size(renderAboutCard(DEFAULT_ABOUT_ROWS, { frame: false, title: '' }));
   assert.ok(noTitle < h);
 });
@@ -80,4 +80,12 @@ test('typing reveals each value in steps and ends with a cursor', () => {
   assert.ok(begins[1] > begins[0], 'second row starts after the first');
   assert.match(typed, /attributeName="opacity"[^>]*repeatCount="indefinite"/);
   assert.match(typed, /prefers-reduced-motion:reduce\)\{[^}]*clip-path:none/);
+});
+
+test('a taller text-only card centres its rows instead of spreading them', () => {
+  const rows = DEFAULT_ABOUT_ROWS.slice(0, 2);
+  const svg = renderAboutCard(rows, { frame: false, height: 200, dots });
+  assert.deepEqual(size(svg).slice(1), [200]);
+  const ys = [...svg.matchAll(/<path d="M4 (\d+)h2/g)].map((m) => Number(m[1]));
+  assert.ok(Math.min(...ys) > 40, 'rows were not moved down to the middle');
 });
