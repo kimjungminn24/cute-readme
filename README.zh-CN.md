@@ -34,6 +34,12 @@ make your GitHub profile a tiny pixel home
 
 放一个 `+ repo cards` 块，填 `owner/repo`。上面这张是 `pixel` 主题。
 
+## Add a music card
+
+<img src="./docs/sample-music.svg" alt="Now playing">
+
+放一个 `+ music` 块，粘贴 YouTube 链接。点 `Load` 会填入标题和视频缩略图；也可以自己输入标题，保留像素黑胶唱片。卡片链接到视频，不需要任何工作流。
+
 ## CONTRIBUTORS
 
 <img src="./docs/suika.svg" width="520" alt="贡献者">

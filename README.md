@@ -34,6 +34,12 @@ Drop a `+ link badges` block, pick a preset or type your own label and URL.
 
 Drop a `+ repo cards` block and enter `owner/repo`. The card above is the `pixel` theme.
 
+## Add a music card
+
+<img src="./docs/sample-music.svg" alt="Now playing">
+
+Drop a `+ music` block and paste a YouTube link. `Load` fills in the title and the video thumbnail; you can also type the title yourself and keep the pixel vinyl. The card links to the video, so there is nothing to keep running.
+
 ## CONTRIBUTORS
 
 <img src="./docs/suika.svg" width="520" alt="Contributors">

@@ -34,6 +34,12 @@ make your GitHub profile a tiny pixel home
 
 `+ repo cards` 블록을 놓고 `owner/repo` 를 적습니다. 위 카드는 `pixel` 테마입니다.
 
+## Add a music card
+
+<img src="./docs/sample-music.svg" alt="Now playing">
+
+`+ music` 블록에 유튜브 링크를 붙여 넣으세요. `Load`를 누르면 제목과 영상 썸네일을 가져옵니다. 제목을 직접 쓰고 픽셀 LP판을 그대로 둬도 됩니다. 카드를 누르면 영상으로 이동하고, 따로 돌아가는 워크플로는 없습니다.
+
 ## CONTRIBUTORS
 
 <img src="./docs/suika.svg" width="520" alt="기여자">
