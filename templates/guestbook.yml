@@ -16,7 +16,7 @@ on:
 env:
   CUTE_README_REPO: kimjungminn24/cute-readme
   GUESTBOOK_DISCUSSION: ''      # discussion number; empty finds the one titled "Guestbook"
-  GUESTBOOK_THEME: pixel        # pixel, light, dark
+  GUESTBOOK_THEME: pixel        # pixel, card, light, dark
   GUESTBOOK_TITLE: Guestbook
   GUESTBOOK_LIMIT: 8
   GUESTBOOK_WIDTH: 520
