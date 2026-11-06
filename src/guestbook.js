@@ -5,7 +5,37 @@ import { canDraw, dotText, dotWidth, dotWrap } from './dotfont.js';
 // One sheet of lined paper: each comment is a row with the visitor's avatar,
 // name, date and message.
 
+// Same stepped-corner frame as the pixel repo card, so the two sit well together.
+function cutRect(x, y, w, h, q) {
+  const [l, r, t, b] = [x, x + w, y, y + h];
+  return `M${l + q} ${t}H${r - q}V${t + q}H${r}V${b - q}H${r - q}V${b}`
+    + `H${l + q}V${b - q}H${l}V${t + q}H${l + q}Z`;
+}
+
+const CARD_INK = '#17171a';
+const CARD_FACE = '#ffffff';
+const CARD_SHADE = '#d5d5da';
+
 export const GUESTBOOK_THEMES = {
+  card: {
+    label: 'Pixel card',
+    paper: CARD_FACE,
+    ink: CARD_INK,
+    sub: '#4a4a52',
+    accent: CARD_INK,
+    rule: CARD_SHADE,
+    frame: CARD_INK,
+    radius: 0,
+    crisp: true,
+    dots: true,
+    sheet: (w, h) => {
+      const q = 4;
+      return `<path d="${cutRect(0, 0, w, h, q)}" fill="${CARD_INK}"/>`
+        + `<path d="${cutRect(3, 3, w - 6, h - 6, q)}" fill="${CARD_FACE}"/>`
+        + `<rect x="${3 + q}" y="${h - 5}" width="${w - 6 - q * 2}" height="2" fill="${CARD_SHADE}"/>`
+        + `<rect x="${w - 5}" y="${3 + q}" width="2" height="${h - 6 - q * 2}" fill="${CARD_SHADE}"/>`;
+    },
+  },
   pixel: {
     label: 'Pixel',
     paper: '#fffaf5',
@@ -210,8 +240,10 @@ export function renderGuestbook(entries = [], options = {}) {
   const H = list.length ? y - ROW_PAD + 4 : HEAD + 52;
 
   const parts = [
-    `<rect x="1" y="1" width="${W - 2}" height="${H - 2}" fill="${t.paper}" stroke="${t.frame}"`
-    + ` stroke-width="${t.crisp ? 2 : 1}"${t.radius ? ` rx="${t.radius}"` : ''}/>`,
+    t.sheet
+      ? t.sheet(W, H)
+      : `<rect x="1" y="1" width="${W - 2}" height="${H - 2}" fill="${t.paper}" stroke="${t.frame}"`
+        + ` stroke-width="${t.crisp ? 2 : 1}"${t.radius ? ` rx="${t.radius}"` : ''}/>`,
   ];
 
   // header: heart, title, count, hint
