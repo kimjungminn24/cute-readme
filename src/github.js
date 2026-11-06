@@ -111,3 +111,57 @@ export async function fetchContributionDays(user) {
   if (!days.length) throw new Error('found no days in the contribution graph; GitHub may have changed the page');
   return days;
 }
+
+export async function graphql(query, variables, token) {
+  if (!token) throw new Error('the Discussions API needs a token (GITHUB_TOKEN)');
+  const res = await fetch(`${API}/graphql`, {
+    method: 'POST',
+    headers: { ...headers(token), 'Content-Type': 'application/json' },
+    body: JSON.stringify({ query, variables }),
+    signal: AbortSignal.timeout(TIMEOUT_MS),
+  });
+  if (rateLimited(res)) throw new Error(RATE_LIMIT_MESSAGE);
+  if (!res.ok) throw new Error(`GraphQL request failed (${res.status})`);
+  const out = await res.json();
+  if (out.errors?.length) throw new Error(out.errors.map((e) => e.message).join('; '));
+  return out.data;
+}
+
+const DISCUSSION_LIST = `query($owner: String!, $repo: String!) {
+  repository(owner: $owner, name: $repo) {
+    hasDiscussionsEnabled
+    discussions(first: 50, orderBy: { field: CREATED_AT, direction: DESC }) { nodes { number title } }
+  }
+}`;
+
+const DISCUSSION_COMMENTS = `query($owner: String!, $repo: String!, $number: Int!) {
+  repository(owner: $owner, name: $repo) {
+    discussion(number: $number) {
+      number title url
+      comments(last: 50) {
+        nodes { body createdAt url isMinimized author { login avatarUrl } }
+      }
+    }
+  }
+}`;
+
+// Finds the guestbook discussion (by number, or by a title that contains `match`)
+// and returns its comments. Returns null when there is no such discussion.
+export async function fetchGuestbook({ owner, repo, token, number, match = 'guestbook' }) {
+  let num = Number(number) || 0;
+
+  if (!num) {
+    const data = await graphql(DISCUSSION_LIST, { owner, repo }, token);
+    const r = data?.repository;
+    if (!r) throw new Error(`no such repo: ${owner}/${repo}`);
+    if (!r.hasDiscussionsEnabled) throw new Error(`Discussions are turned off in ${owner}/${repo}`);
+    const want = String(match).toLowerCase();
+    num = r.discussions.nodes.find((d) => d.title.toLowerCase().includes(want))?.number ?? 0;
+    if (!num) return null;
+  }
+
+  const data = await graphql(DISCUSSION_COMMENTS, { owner, repo, number: num }, token);
+  const d = data?.repository?.discussion;
+  if (!d) return null;
+  return { number: d.number, title: d.title, url: d.url, comments: d.comments?.nodes ?? [] };
+}
