@@ -52,12 +52,12 @@ test('the pixel theme writes with the dot font', () => {
   assert.ok(!svg.includes('<text'), 'fell back to <text>');
 });
 
-test('a thumbnail replaces the vinyl', () => {
+test('a thumbnail replaces the default cover', () => {
   const cover = 'data:image/jpeg;base64,AAAA';
   const withCover = renderMusicCard({ id: ID, title: 'a', cover }, { theme: 'light' });
-  const vinyl = renderMusicCard({ id: ID, title: 'a' }, { theme: 'light' });
+  const plain = renderMusicCard({ id: ID, title: 'a' }, { theme: 'light' });
   assert.ok(withCover.includes(`href="${cover}"`));
-  assert.ok(!vinyl.includes('<image'));
+  assert.ok(!plain.includes('<image'));
 });
 
 test('text is escaped', () => {
@@ -66,7 +66,21 @@ test('text is escaped', () => {
   assert.ok(svg.includes('&amp; co'));
 });
 
+test('the cover is a 16:9 box with or without a thumbnail', () => {
+  assert.match(renderMusicCard({ title: 'a' }, { theme: 'light' }), /<rect x="16" y="20" width="128" height="72"/);
+  const svg = renderMusicCard({ title: 'a', cover: 'data:image/jpeg;base64,AAAA' }, { theme: 'light' });
+  assert.match(svg, /<image [^>]*width="128" height="72"/);
+});
+
 test('motion stops for reduced motion', () => {
   const svg = renderMusicCard({ title: 'a' }, { theme: 'pixel' });
   assert.match(svg, /prefers-reduced-motion:reduce/);
+});
+
+test('the square layout puts the title under a full-width thumbnail', () => {
+  const svg = renderMusicCard({ title: 'a', artist: 'b' }, { theme: 'light', layout: 'square' });
+  const [, w, h] = svg.match(/viewBox="0 0 (\d+) (\d+)"/).map(Number);
+  assert.equal(w, 220);
+  assert.ok(Math.abs(w - h) <= 12, `${w}x${h} is not close to square`);
+  assert.match(svg, /<rect x="16" y="16" width="188" height="106"/);
 });

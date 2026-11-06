@@ -22,13 +22,13 @@ const songOf = (b) => ({
   id: parseYouTube(b.url),
   title: b.title,
   artist: b.artist,
-  cover: b.art === "thumbnail" ? b.cover : null,
+  cover: b.cover,
 });
 
 function cardOpts(b) {
   const theme = MUSIC_CARD_THEMES[b.theme] ? b.theme : DEFAULT_MUSIC_THEME;
   if (MUSIC_CARD_THEMES[theme].dots) wantDotFont();
-  return { theme, width: b.width, dots: dotFont };
+  return { theme, layout: b.layout, width: b.width, dots: dotFont };
 }
 
 const fileName = (b) => assetNames(b, "music", (x) => [musicFile(songOf(x))])[0];
@@ -58,7 +58,7 @@ async function readTitle(id) {
 BLOCKS.music = {
   label: "music",
   fresh: () => ({
-    url: "", title: "", artist: "", cover: null, art: "vinyl",
+    url: "", title: "", artist: "", cover: null, layout: "wide",
     theme: DEFAULT_MUSIC_THEME, width: 400, align: "center",
   }),
 
@@ -102,7 +102,7 @@ BLOCKS.music = {
       try {
         b.cover = await readThumbnail(id);
         notes.push("thumbnail ready");
-      } catch { b.cover = null; notes.push("no thumbnail, the vinyl stays"); }
+      } catch { b.cover = null; notes.push("could not fetch the thumbnail, using the default cover"); }
       status.textContent = notes.join(". ");
       load.disabled = false;
       changed();
@@ -113,7 +113,7 @@ BLOCKS.music = {
     names.append(title, artist);
     card.append(names);
     ui.rowStart();
-    ui.select(b, "art", [["vinyl", "pixel vinyl"], ["thumbnail", "video thumbnail"]]);
+    ui.select(b, "layout", [["wide", "wide"], ["square", "square"]], () => { b.width = b.layout === "square" ? 220 : 400; shared.renderBlocks?.(); changed(); });
     ui.select(b, "theme", Object.entries(MUSIC_CARD_THEMES).map(([id, t]) => [id, t.label]));
     ui.number(b, "width");
     ui.rowEnd();

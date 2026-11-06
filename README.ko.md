@@ -36,9 +36,9 @@ make your GitHub profile a tiny pixel home
 
 ## Add a music card
 
-<img src="./docs/sample-music.svg" alt="Now playing">
+<img src="./docs/sample-music.svg" alt="Now playing"> <img src="./docs/sample-music-square.svg" alt="Now playing, square">
 
-`+ music` 블록에 유튜브 링크를 붙여 넣으세요. `Load`를 누르면 제목과 영상 썸네일을 가져옵니다. 제목을 직접 쓰고 픽셀 LP판을 그대로 둬도 됩니다. 카드를 누르면 영상으로 이동하고, 따로 돌아가는 워크플로는 없습니다.
+`+ music` 블록에 유튜브 링크를 붙여 넣으세요. `Load`를 누르면 제목과 영상 썸네일을 가져옵니다. 썸네일을 가져오지 못하면 픽셀 커버로 대신 그립니다. 모양은 `wide`와 `square` 중에 고를 수 있습니다. 카드를 누르면 영상으로 이동하고, 따로 돌아가는 워크플로는 없습니다.
 
 ## CONTRIBUTORS
 

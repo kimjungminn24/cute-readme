@@ -36,9 +36,9 @@ Drop a `+ repo cards` block and enter `owner/repo`. The card above is the `pixel
 
 ## Add a music card
 
-<img src="./docs/sample-music.svg" alt="Now playing">
+<img src="./docs/sample-music.svg" alt="Now playing"> <img src="./docs/sample-music-square.svg" alt="Now playing, square">
 
-Drop a `+ music` block and paste a YouTube link. `Load` fills in the title and the video thumbnail; you can also type the title yourself and keep the pixel vinyl. The card links to the video, so there is nothing to keep running.
+Drop a `+ music` block and paste a YouTube link. `Load` fills in the title and the video thumbnail. If the thumbnail cannot be fetched, the card uses a pixel cover instead. Pick `wide` or `square`. The card links to the video, so there is nothing to keep running.
 
 ## CONTRIBUTORS
 

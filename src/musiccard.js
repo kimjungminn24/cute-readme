@@ -12,25 +12,25 @@ export const MUSIC_CARD_THEMES = {
   pixel: {
     label: 'Pixel',
     bg: FACE, ink: INK, sub: '#4a4a52', track: SHADE, accent: '#c05b76',
-    border: INK, edge: INK, radius: 0, crisp: true, dots: true, stepped: true,
+    border: INK, radius: 0, crisp: true, dots: true, stepped: true,
   },
   light: {
     label: 'Light',
     bg: '#ffffff', ink: '#1f2328', sub: '#656d76', track: '#eaeef2', accent: '#c05b76',
-    border: '#d0d7de', edge: INK, radius: 10, crisp: false, dots: false, stepped: false,
+    border: '#d0d7de', radius: 10, crisp: false, dots: false, stepped: false,
   },
   dark: {
     label: 'Dark',
     bg: '#0d1117', ink: '#e6edf3', sub: '#9198a1', track: '#30363d', accent: '#e48aa3',
-    border: '#30363d', edge: '#484f58', radius: 10, crisp: false, dots: false, stepped: false,
+    border: '#30363d', radius: 10, crisp: false, dots: false, stepped: false,
   },
 };
 
 export const DEFAULT_MUSIC_THEME = 'pixel';
 
-const H = 112;
+const WIDE_H = 112;
 const COVER = 72;
-const PAD = 20;
+const PAD = 16;
 
 const n = (v) => Math.round(v * 100) / 100;
 
@@ -99,46 +99,57 @@ function writer(dots) {
   return { width, write, fit };
 }
 
-// A pixel disc: one rect per row, so it stays crisp at any size.
-function disc(cx, cy, r, color) {
+// The cover used when there is no thumbnail: a little pixel screen with a play button
+// and a few notes, tinted by the song so different songs do not look the same.
+const TINTS = [
+  ['#ffe3ea', '#c05b76'],
+  ['#fff1d6', '#d98a1f'],
+  ['#dcecff', '#3f7cc0'],
+  ['#e2f3dc', '#4f9a3c'],
+  ['#ece2ff', '#7c5cc4'],
+];
+
+const NOTE = ['0011', '0011', '0010', '0010', '1110', '1110'];
+
+function pixels(rows, x, y, cell, color) {
   let d = '';
-  for (let y = -r; y < r; y++) {
-    const half = Math.floor(Math.sqrt(r * r - (y + 0.5) ** 2));
-    if (half > 0) d += `M${cx - half} ${cy + y}h${half * 2}v1h${-half * 2}z`;
-  }
+  rows.forEach((row, r) => [...row].forEach((on, c) => {
+    if (on === '1') d += `M${x + c * cell} ${y + r * cell}h${cell}v${cell}h${-cell}z`;
+  }));
   return `<path d="${d}" fill="${color}"/>`;
 }
 
-function vinyl(x, y, t, label, id) {
-  const cx = x + COVER / 2;
-  const cy = y + COVER / 2;
-  const r = COVER / 2;
-  // Only the label turns: a whole pixel disc goes jagged when it rotates.
-  return disc(cx, cy, r, t.edge)
-    + disc(cx, cy, r - 1, INK)
-    + `<path d="M${cx - r + 6} ${cy}h${r - 18}M${cx + 12} ${cy}h${r - 18}" stroke="#3a3a40" stroke-width="1"/>`
-    + disc(cx, cy, r - 8, '#2a2a30')
-    + disc(cx, cy, r - 11, INK)
-    + `<g class="${id}spin">`
-    + disc(cx, cy, 12, label)
-    + `<rect x="${cx - 6}" y="${cy - 9}" width="4" height="3" fill="#ffffff" opacity="0.6"/>`
-    + `</g>`
-    + disc(cx, cy, 2, t.bg);
+function defaultCover(x, y, w, h, seed) {
+  const [paper, ink] = TINTS[hash(seed) % TINTS.length];
+  const cx = Math.round(x + w / 2);
+  const cy = Math.round(y + h / 2);
+  const k = w > 150 ? 3 : 2;
+  // play button: a square with a stepped triangle
+  let tri = '';
+  for (let i = 0; i < 6; i++) tri += `M${cx - 3 + i} ${cy - 6 + i}h1v${12 - i * 2}h-1z`;
+  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${paper}"/>`
+    + `<path d="M${x} ${y + h - 10}h${w}v10h${-w}z" fill="${ink}" opacity="0.18"/>`
+    + pixels(NOTE, x + 7 * k, y + 6 * k, k, ink)
+    + pixels(NOTE, x + w - 13 * k, y + 10 * k, k, ink)
+    + pixels(NOTE, x + w - 22 * k, y + 4 * k, k / 2, ink)
+    + `<rect x="${cx - 13}" y="${cy - 11}" width="26" height="22" fill="${ink}"/>`
+    + `<path d="${tri}" fill="${paper}"/>`;
 }
 
-function cover(song, x, y, t, id) {
-  if (!song.cover) {
-    const labels = ['#c05b76', '#f2a541', '#5fa8d3', '#7fb069', '#9b72cf'];
-    return vinyl(x, y, t, labels[hash(song.title || song.id) % labels.length], id);
-  }
+const THUMB_W = 128;
+
+function cover(song, x, y, w, h, t, id) {
   const clip = `${id}cv`;
-  return `<defs><clipPath id="${clip}"><rect x="${x}" y="${y}" width="${COVER}" height="${COVER}"`
-    + `${t.radius ? ' rx="8"' : ''}/></clipPath></defs>`
-    + `<image href="${escapeXml(song.cover)}" x="${x - 32}" y="${y}" width="${COVER + 64}" height="${COVER}"`
-    + ` preserveAspectRatio="xMidYMid slice" clip-path="url(#${clip})"/>`
+  const art = song.cover
+    ? `<image href="${escapeXml(song.cover)}" x="${x}" y="${y}" width="${w}" height="${h}"`
+      + ` preserveAspectRatio="xMidYMid slice" clip-path="url(#${clip})"/>`
+    : `<g clip-path="url(#${clip})">${defaultCover(x, y, w, h, song.title || song.id || '')}</g>`;
+  return `<defs><clipPath id="${clip}"><rect x="${x}" y="${y}" width="${w}" height="${h}"`
+    + `${t.radius ? ' rx="6"' : ''}/></clipPath></defs>`
+    + art
     + (t.stepped
-      ? `<rect x="${x - 1}" y="${y - 1}" width="${COVER + 2}" height="${COVER + 2}" fill="none" stroke="${t.ink}" stroke-width="2"/>`
-      : '');
+      ? `<rect x="${x - 1}" y="${y - 1}" width="${w + 2}" height="${h + 2}" fill="none" stroke="${t.ink}" stroke-width="2"/>`
+      : `<rect x="${x + 0.5}" y="${y + 0.5}" width="${w - 1}" height="${h - 1}" rx="6" fill="none" stroke="${t.border}"/>`);
 }
 
 // Four bars that bounce while the song "plays".
@@ -169,11 +180,22 @@ export function renderMusicCard(song = {}, options = {}) {
   const themeId = options.theme in MUSIC_CARD_THEMES ? options.theme : DEFAULT_MUSIC_THEME;
   const t = MUSIC_CARD_THEMES[themeId];
   const text = writer(t.dots ? options.dots : null);
-  const W = Math.min(600, Math.max(300, Math.round(Number(options.width) || 400)));
+  const layout = options.layout === 'square' ? 'square' : 'wide';
+  const W = layout === 'square'
+    ? Math.min(360, Math.max(180, Math.round(Number(options.width) || 220)))
+    : Math.min(600, Math.max(300, Math.round(Number(options.width) || 400)));
   const title = String(song.title || 'Untitled');
   const artist = String(song.artist || '');
-  const id = `mc${hash(`${themeId}|${W}|${title}|${artist}|${song.id ?? ''}`).toString(36)}`;
+  const id = `mc${hash(`${themeId}|${layout}|${W}|${title}|${artist}|${song.id ?? ''}`).toString(36)}`;
   const parts = [];
+
+  const square = layout === 'square';
+  const thumbW = square ? W - PAD * 2 : THUMB_W;
+  const thumbH = square ? Math.round(thumbW * 9 / 16) : COVER;
+  const tx = square ? PAD : PAD + THUMB_W + 16;
+  const top = square ? PAD + thumbH + 22 : 30;
+  const H = square ? top + 67 : WIDE_H;
+  const room = W - tx - PAD;
 
   // card body
   if (t.stepped) {
@@ -187,19 +209,16 @@ export function renderMusicCard(song = {}, options = {}) {
     parts.push(`<rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="${t.radius}" fill="${t.bg}" stroke="${t.border}"/>`);
   }
 
-  parts.push(cover(song, PAD, (H - COVER) / 2, t, id));
+  parts.push(cover(song, PAD, square ? PAD : (H - COVER) / 2, thumbW, thumbH, t, id));
 
-  const tx = PAD + COVER + 16;
-  const room = W - tx - PAD;
-
-  parts.push(equalizer(tx, 30, t.accent, id));
-  parts.push(text.write('NOW PLAYING', tx + 22, 30, t.sub, 9, { spacing: 1 }));
-  parts.push(text.write(text.fit(title, room, 14), tx, 50, t.ink, 14, { bold: true }));
-  if (artist) parts.push(text.write(text.fit(artist, room, 11), tx, 65, t.sub, 11));
+  parts.push(equalizer(tx, top, t.accent, id));
+  parts.push(text.write('NOW PLAYING', tx + 22, top, t.sub, 9, { spacing: 1 }));
+  parts.push(text.write(text.fit(title, room, 14), tx, top + 20, t.ink, 14, { bold: true }));
+  if (artist) parts.push(text.write(text.fit(artist, room, 11), tx, top + 35, t.sub, 11));
 
   // progress bar with a square knob
-  const barY = 80;
-  const barW = room - 50;
+  const barY = top + 50;
+  const barW = Math.max(40, room - 50);
   const done = Math.round(barW * 0.38);
   parts.push(
     `<rect x="${tx}" y="${barY}" width="${barW}" height="2" fill="${t.track}"/>`,
@@ -209,11 +228,9 @@ export function renderMusicCard(song = {}, options = {}) {
   );
 
   const css = `@keyframes ${id}b{0%,100%{transform:scaleY(.35)}50%{transform:scaleY(1)}}`
-    + `@keyframes ${id}r{to{transform:rotate(360deg)}}`
     + `#${id} .${id}eq{transform-box:fill-box;transform-origin:bottom;animation:${id}b .9s ease-in-out infinite}`
     + [0, 1, 2, 3].map((i) => `#${id} .${id}eq${i}{animation-delay:${-i * 0.23}s}`).join('')
-    + `#${id} .${id}spin{transform-box:fill-box;transform-origin:center;animation:${id}r 4s linear infinite}`
-    + `@media(prefers-reduced-motion:reduce){#${id} .${id}eq,#${id} .${id}spin{animation:none}}`;
+    + `@media(prefers-reduced-motion:reduce){#${id} .${id}eq{animation:none}}`;
 
   const label = artist ? `${title} by ${artist}` : title;
   return `<svg xmlns="http://www.w3.org/2000/svg" ${sizeAttrs(W, H, options.scale)} id="${id}"`
