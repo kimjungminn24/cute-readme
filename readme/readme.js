@@ -1,6 +1,7 @@
 import "./readme-blocks.js";
 import "./readme-stickers.js";
 import "./readme-embeds.js";
+import "./readme-music.js";
 import "./readme-board.js";
 import { showPane } from "./readme-preview.js";
 import { $, app, BLOCKS, load, forget, refresh, flash, copyText } from "./readme-shared.js";
@@ -11,7 +12,7 @@ import { makeZip } from "../src/zip.js";
 
 const PALETTE = [
   "heading", "text", "banner", "image", "list", "divider", "spacer",
-  "sticker", "line", "miniroom", "links", "repocards",
+  "sticker", "line", "miniroom", "links", "repocards", "music",
 ];
 
 app.doc = load() ?? [
