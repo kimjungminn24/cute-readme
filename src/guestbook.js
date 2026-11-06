@@ -218,7 +218,9 @@ function rowParts(entry, i, row, ctx) {
 }
 
 export function renderGuestbook(entries = [], options = {}) {
-  const opts = { ...DEFAULTS, ...options };
+  // Options left undefined (an unset env var, say) keep their defaults.
+  const given = Object.fromEntries(Object.entries(options).filter(([, v]) => v !== undefined));
+  const opts = { ...DEFAULTS, ...given };
   const themeId = opts.theme in GUESTBOOK_THEMES ? opts.theme : DEFAULT_GUESTBOOK_THEME;
   const t = GUESTBOOK_THEMES[themeId];
   const text = writer(t.dots ? opts.dots : null);
