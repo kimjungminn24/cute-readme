@@ -38,6 +38,24 @@ make your GitHub profile a tiny pixel home
 
 <img src="./docs/suika.svg" width="520" alt="贡献者">
 
+## Guestbook
+
+<img src="./docs/sample-guestbook.svg" width="520" alt="留言簿">
+
+访客在 GitHub Discussion 里留言，留言会连同头像和名字一起出现在你的 README 留言簿里。
+
+1. 在 Settings > General > Features 里打开 Discussions。
+2. 新建一个标题里带 `Guestbook` 的讨论。推荐用 Announcements 分类：只有你能发帖，所有人都能评论。
+3. 把 [templates/guestbook.yml](templates/guestbook.yml) 复制到 `.github/workflows/guestbook.yml`。每次有人留言，它都会重画 `guestbook.svg`。
+
+把图片链接到这个讨论，访客就知道在哪里留言：
+
+```html
+<a href="https://github.com/YOU/YOU/discussions/1"><img src="./guestbook.svg" width="100%" alt="留言簿"></a>
+```
+
+想撤下某条留言，在讨论里隐藏该评论即可，下次运行时它就会消失。
+
 ## When something does not work
 
 - 图片不显示：确认路径是 `./room.svg` 这样的相对路径，并且文件已经提交。
