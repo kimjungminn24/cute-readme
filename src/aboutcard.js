@@ -88,12 +88,12 @@ export const ABOUT_ICONS = {
   ],
   mail: [
     '........',
-    'ooooooo.',
-    'o#+++#o.',
-    'o+#+#+o.',
-    'o++#++o.',
-    'o+++++o.',
-    'ooooooo.',
+    '########',
+    '##++++##',
+    '#+#++#+#',
+    '#++##++#',
+    '#++++++#',
+    '########',
     '........',
   ],
   star: [
@@ -240,16 +240,19 @@ export function renderAboutCard(rows = DEFAULT_ABOUT_ROWS, options = {}) {
   // frame: false draws only the icons and words on a transparent background.
   const bare = options.frame === false;
   const head = bare ? (title ? 30 : 4) : BAR + 18;
-  const natural = head + list.length * ROW + (bare ? 0 : 8);
+  // Text-only rows sit closer together, and stay together when the card is taller.
+  const rowH = bare ? 24 : ROW;
+  const natural = head + list.length * rowH + (bare ? 0 : 8);
   const H = Math.max(natural, Math.round(Number(options.height) || 0), bare ? 0 : BAR + 60);
-  const id = `ab${hash(`${themeId}|${bare}|${W}|${H}|${title}|${JSON.stringify(list)}`).toString(36)}`;
+  const id = `ab${hash(`${themeId}|${bare}|${options.typing === true}|${W}|${H}|${title}|${JSON.stringify(list)}`).toString(36)}`;
 
   const parts = [];
   if (bare) {
     if (title) {
       // same columns as the rows below: icon at 4, words at 30
-      parts.push(iconArt('heart', 4, 4, t));
-      parts.push(text.write(title, 30, 17, t.ink, 13, { bold: true }));
+      const ty = Math.floor((H - natural) / 2);
+      parts.push(iconArt('heart', 4, 4 + ty, t));
+      parts.push(text.write(title, 30, 17 + ty, t.ink, 13, { bold: true }));
     }
   } else if (t.plain) {
     const clip = `${id}c`;
@@ -292,16 +295,50 @@ export function renderAboutCard(rows = DEFAULT_ABOUT_ROWS, options = {}) {
   const labelW = Math.max(0, ...labels.map((l) => text.width(l, 12, true)));
   const left = bare ? 4 : PAD;
   const valueX = left + 26 + labelW + 12;
-  const top = head;
-  const step = list.length ? Math.max(ROW, Math.floor((H - top - (bare ? 0 : 12)) / list.length)) : ROW;
+  const lift = bare ? Math.floor((H - natural) / 2) : 0;
+  const top = head + lift;
+  const step = bare || !list.length ? rowH : Math.max(ROW, Math.floor((H - top - 12) / list.length));
+
+  // typing: true reveals each value one character at a time, row after row,
+  // then leaves a blinking cursor after the last one.
+  const typing = options.typing === true;
+  const CHAR = 0.07;
+  const PAUSE = 0.35;
+  let clock = 0.4;
+  let cursor = null;
 
   list.forEach((r, i) => {
-    const y = top + i * step + Math.floor((step - ROW) / 2);
+    const y = top + i * step + (bare ? 0 : Math.floor((step - ROW) / 2));
     parts.push(iconArt(r.icon, left, y, t));
     parts.push(text.write(String(r.label ?? ''), left + 26, y + 12, t.accent, 12, { bold: true }));
     const value = text.fit(String(r.text ?? ''), W - valueX - (bare ? 4 : PAD), 12);
-    parts.push(text.write(value, valueX, y + 12, t.ink, 12));
+    const drawnValue = text.write(value, valueX, y + 12, t.ink, 12);
+    const chars = [...value];
+    if (!typing || !chars.length) {
+      parts.push(drawnValue);
+      return;
+    }
+    const widths = chars.map((_, k) => text.width(chars.slice(0, k + 1).join(''), 12) + 1);
+    const steps = [0, ...widths];
+    const keyTimes = steps.map((_, k) => n(k / steps.length)).join(';');
+    const dur = n(steps.length * CHAR);
+    const clip = `${id}t${i}`;
+    parts.push(
+      `<defs><clipPath id="${clip}"><rect x="${valueX}" y="${y - 2}" width="0" height="20">`
+      + `<animate attributeName="width" begin="${n(clock)}s" dur="${dur}s" values="${steps.join(';')}"`
+      + ` keyTimes="${keyTimes}" calcMode="discrete" fill="freeze"/></rect></clipPath></defs>`,
+      `<g class="${id}ty" clip-path="url(#${clip})">${drawnValue}</g>`,
+    );
+    clock += steps.length * CHAR + PAUSE;
+    cursor = { x: valueX + widths[widths.length - 1] + 1, y };
   });
+
+  if (cursor) {
+    parts.push(
+      `<rect class="${id}cur" x="${cursor.x}" y="${cursor.y + 3}" width="6" height="11" fill="${t.accent}" opacity="0">`
+      + `<animate attributeName="opacity" begin="${n(clock - PAUSE)}s" dur="1s" values="1;0" calcMode="discrete" repeatCount="indefinite"/></rect>`,
+    );
+  }
 
   if (!bare) {
     // corner twinkles
@@ -311,10 +348,13 @@ export function renderAboutCard(rows = DEFAULT_ABOUT_ROWS, options = {}) {
     );
   }
 
-  const css = bare ? '' : `@keyframes ${id}k{0%,100%{opacity:1}50%{opacity:.25}}`
+  const motion = typing
+    ? `@media(prefers-reduced-motion:reduce){#${id} .${id}ty{clip-path:none}#${id} .${id}cur{display:none}}`
+    : '';
+  const css = motion + (bare ? '' : `@keyframes ${id}k{0%,100%{opacity:1}50%{opacity:.25}}`
     + `#${id} .${id}tw{animation:${id}k 2.4s steps(2) infinite}`
     + `#${id} .${id}tw2{animation-delay:-1.2s}`
-    + `@media(prefers-reduced-motion:reduce){#${id} .${id}tw{animation:none}}`;
+    + `@media(prefers-reduced-motion:reduce){#${id} .${id}tw{animation:none}}`);
 
   const scale = Number(options.scale) > 0 ? Number(options.scale) : 1;
   const size = scale === 1 ? `width="${W}" height="${H}"` : `width="${Math.round(W * scale)}" height="${Math.round(H * scale)}"`;
