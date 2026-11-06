@@ -66,3 +66,18 @@ test('frame: false leaves only the icons and words', () => {
   const [, noTitle] = size(renderAboutCard(DEFAULT_ABOUT_ROWS, { frame: false, title: '' }));
   assert.ok(noTitle < h);
 });
+
+test('typing reveals each value in steps and ends with a cursor', () => {
+  const rows = [{ icon: 'star', label: 'a', text: 'abc' }, { icon: 'star', label: 'b', text: 'de' }];
+  const still = renderAboutCard(rows, { frame: false, dots });
+  const typed = renderAboutCard(rows, { frame: false, typing: true, dots });
+  assert.ok(!still.includes('<animate'));
+  const anims = typed.match(/<animate attributeName="width"[^>]*>/g);
+  assert.equal(anims.length, 2);
+  assert.match(anims[0], /values="0;\d+;\d+;\d+"/);
+  assert.match(anims[0], /calcMode="discrete"/);
+  const begins = anims.map((a) => Number(a.match(/begin="([\d.]+)s"/)[1]));
+  assert.ok(begins[1] > begins[0], 'second row starts after the first');
+  assert.match(typed, /attributeName="opacity"[^>]*repeatCount="indefinite"/);
+  assert.match(typed, /prefers-reduced-motion:reduce\)\{[^}]*clip-path:none/);
+});
