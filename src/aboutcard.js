@@ -247,8 +247,9 @@ export function renderAboutCard(rows = DEFAULT_ABOUT_ROWS, options = {}) {
   const parts = [];
   if (bare) {
     if (title) {
+      // same columns as the rows below: icon at 4, words at 30
       parts.push(iconArt('heart', 4, 4, t));
-      parts.push(text.write(title, 24, 17, t.ink, 13, { bold: true }));
+      parts.push(text.write(title, 30, 17, t.ink, 13, { bold: true }));
     }
   } else if (t.plain) {
     const clip = `${id}c`;
